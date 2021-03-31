@@ -1,11 +1,17 @@
 package com.gameonanil.qrattendenceproject
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Toast
 import com.gameonanil.qrattendenceproject.databinding.ActivityTeacherBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
@@ -15,10 +21,17 @@ class TeacherActivity : AppCompatActivity() {
         private const val TAG = "TeacherActivity"
     }
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityTeacherBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbarTeacher)
+
+        auth = FirebaseAuth.getInstance()
+
 
         binding.apply {
 
@@ -50,6 +63,30 @@ class TeacherActivity : AppCompatActivity() {
         }
 
         return bitmap
+
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        MenuInflater(this).inflate(R.menu.menu_logout,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.itemLogout->{
+                auth.signOut()
+                val intent = Intent(this,LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+                return true
+            }
+
+            else->{
+                return super.onOptionsItemSelected(item)
+            }
+
+        }
 
     }
 }

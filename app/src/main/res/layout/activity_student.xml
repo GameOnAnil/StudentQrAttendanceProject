@@ -6,6 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".StudentActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_primary"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student Page"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
     <Button
         android:id="@+id/buttonScan"
         android:layout_width="wrap_content"

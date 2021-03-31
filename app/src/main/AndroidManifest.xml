@@ -20,30 +20,30 @@
             tools:replace="screenOrientation" />
         <activity
             android:name=".StudentActivity"
-            android:label="@string/title_activity_teacher"
-            android:theme="@style/Theme.QrAttendenceProject.NoActionBar">
+            android:label="StudentActivity"
+           >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".TeacherActivity"
             android:label="@string/title_activity_teacher"
-            android:theme="@style/Theme.QrAttendenceProject.NoActionBar">
+          >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

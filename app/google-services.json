@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "622213921745",
+    "project_id": "qrattendenceproject",
+    "storage_bucket": "qrattendenceproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622213921745:android:51eb695c374609ee313ef0",
+        "android_client_info": {
+          "package_name": "com.gameonanil.qrattendenceproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622213921745-k3pdobsiddinugugpcn7o15ehruunuvv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt3DyQfFjW7zG9zUc0b0D0uXqOetHuLGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622213921745-k3pdobsiddinugugpcn7o15ehruunuvv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
