@@ -58,6 +58,22 @@
             android:layout_marginBottom="10dp"
             android:text="Login" />
 
+        <Button
+            android:id="@+id/btnTeacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:text="Default Teacher" />
+
+        <Button
+            android:id="@+id/btnStudent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:text="Default Student" />
+
     </LinearLayout>
 
     <ProgressBar

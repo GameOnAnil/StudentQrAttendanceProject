@@ -36,7 +36,8 @@ class TeacherActivity : AppCompatActivity() {
         binding.apply {
 
             buttonGenerate.setOnClickListener {
-                val bitmap = generateQRCode("Hello World!!")
+                val teacherId = auth.currentUser!!.uid
+                val bitmap = generateQRCode(teacherId)
                 imageViewQR.setImageBitmap(bitmap)
 
             }
