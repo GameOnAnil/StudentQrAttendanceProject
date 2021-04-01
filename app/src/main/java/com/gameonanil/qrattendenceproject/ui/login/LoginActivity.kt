@@ -1,4 +1,4 @@
-package com.gameonanil.qrattendenceproject
+package com.gameonanil.qrattendenceproject.ui.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.gameonanil.qrattendenceproject.databinding.ActivityLoginBinding
+import com.gameonanil.qrattendenceproject.ui.student.StudentActivity
+import com.gameonanil.qrattendenceproject.ui.teacher.TeacherActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -97,8 +99,6 @@ class LoginActivity : AppCompatActivity() {
                         "teacher"->goToTeacherActivity()
                     }
 
-
-
                 }.addOnFailureListener {
                     binding.btnLogin.isEnabled = true
                     binding.btnTeacher.isEnabled = true
@@ -122,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnTeacher.isEnabled = true
         binding.btnStudent.isEnabled = true
         binding.progressbarLogin.isVisible = false
-        val intent = Intent(this,TeacherActivity::class.java)
+        val intent = Intent(this, TeacherActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -133,7 +133,7 @@ class LoginActivity : AppCompatActivity() {
         binding.btnTeacher.isEnabled = true
         binding.btnStudent.isEnabled = true
         binding.progressbarLogin.isVisible = false
-        val intent = Intent(this,StudentActivity::class.java)
+        val intent = Intent(this, StudentActivity::class.java)
         startActivity(intent)
         finish()
     }

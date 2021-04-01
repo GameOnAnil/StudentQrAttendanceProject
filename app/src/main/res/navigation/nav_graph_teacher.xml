@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_teacher"
+    app:startDestination="@id/mainTeacherFragment">
+
+    <fragment
+        android:id="@+id/mainTeacherFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragment"
+        android:label="fragment_main_teacher"
+        tools:layout="@layout/fragment_main_teacher" >
+        <action
+            android:id="@+id/action_mainTeacherFragment_to_generatorFragment"
+            app:destination="@id/generatorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generatorFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.GeneratorFragment"
+        android:label="fragment_generator"
+        tools:layout="@layout/fragment_generator" />
+</navigation>
