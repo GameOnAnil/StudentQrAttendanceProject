@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_main_teacher" >
         <action
             android:id="@+id/action_mainTeacherFragment_to_generatorFragment"
-            app:destination="@id/generatorFragment" />
+            app:destination="@id/generatorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/generatorFragment"

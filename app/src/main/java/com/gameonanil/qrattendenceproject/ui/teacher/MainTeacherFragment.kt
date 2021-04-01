@@ -1,16 +1,19 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
 import com.gameonanil.qrattendenceproject.model.User
+import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -37,6 +40,18 @@ class MainTeacherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainTeacherBinding.inflate(inflater, container, false)
+
+        /**Setting Up Toolbar*/
+        val navHostFragment = NavHostFragment.findNavController(this);
+        NavigationUI.setupWithNavController(binding.toolbarTeacherMain, navHostFragment)
+
+        /** TO USE OPTIONS MENU*/
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarTeacherMain)
+        binding.toolbarTeacherMain.setNavigationOnClickListener {
+            NavHostFragment.findNavController(this).navigateUp()
+        }
+
 
 
         attendanceList = mutableListOf()
@@ -78,6 +93,25 @@ class MainTeacherFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_logout, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.itemLogout) {
+            Log.d(TAG, "onOptionsItemSelected: logout pressed")
+
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

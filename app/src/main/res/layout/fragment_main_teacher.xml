@@ -5,12 +5,33 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.teacher.MainTeacherFragment">
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolbar_teacher_main"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentTop="true"
+      android:background="@color/design_default_color_primary"
+      android:elevation="10dp"
+      android:gravity="start"
+      android:minHeight="?attr/actionBarSize"
+      android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Attendance List"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+  </androidx.appcompat.widget.Toolbar>
+
 
   <androidx.recyclerview.widget.RecyclerView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/recyclerTeacher"
-      android:layout_alignParentTop="true"
+     android:layout_below="@id/toolbar_teacher_main"
       tools:listitem="@layout/attendance_list"
       tools:itemCount="10"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>

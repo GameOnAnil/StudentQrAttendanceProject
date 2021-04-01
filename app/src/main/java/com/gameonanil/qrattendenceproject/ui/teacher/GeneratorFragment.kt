@@ -1,15 +1,18 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
+import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -32,6 +35,18 @@ class GeneratorFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGeneratorBinding.inflate(layoutInflater,container,false)
+
+        val navHostFragment = NavHostFragment.findNavController(this);
+        NavigationUI.setupWithNavController(binding.toolbarTeacherGenerate, navHostFragment)
+
+        /** TO USE OPTIONS MENU*/
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarTeacherGenerate)
+        binding.toolbarTeacherGenerate.setNavigationOnClickListener {
+            NavHostFragment.findNavController(this).navigateUp()
+        }
+
+
 
         auth = FirebaseAuth.getInstance()
 
@@ -77,5 +92,24 @@ class GeneratorFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_logout, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.itemLogout) {
+            Log.d(TAG, "onOptionsItemSelected: logout pressed")
+
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
 }
