@@ -35,19 +35,20 @@ class GeneratorFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
 
-        binding.apply {
 
-            buttonGenerate.setOnClickListener {
-                val teacherId = auth.currentUser!!.uid
-                val bitmap = generateQRCode(teacherId)
-                imageViewQR.setImageBitmap(bitmap)
 
-            }
-
-        }
+        generateOnStart()
 
 
         return binding.root
+    }
+
+    private fun generateOnStart(){
+        binding.apply {
+            val teacherId = auth.currentUser!!.uid
+            val bitmap = generateQRCode(teacherId)
+            imageViewQR.setImageBitmap(bitmap)
+        }
     }
 
     private fun generateQRCode(text: String): Bitmap {
