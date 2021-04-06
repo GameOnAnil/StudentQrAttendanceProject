@@ -15,7 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QrAttendenceProject">
-        <activity android:name=".ui.teacher.TeacherActivity"></activity>
+        <activity
+            android:name=".ui.admin.AdminActivity"
+            android:label="@string/title_activity_admin"
+            android:theme="@style/Theme.QrAttendenceProject.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
@@ -27,7 +37,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.teacher.TeacherActivity2">
+        <activity android:name=".ui.teacher.TeacherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

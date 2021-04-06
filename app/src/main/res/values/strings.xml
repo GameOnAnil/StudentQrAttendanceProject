@@ -11,4 +11,11 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_admin">AdminActivity</string>
+
+    <string-array name="user_type">
+        <item>Select User Type</item>
+        <item>Teacher</item>
+        <item>Student</item>
+    </string-array>
 </resources>

@@ -103,12 +103,9 @@ class StudentActivity : AppCompatActivity() {
                 finish()
                 return true
             }
-
             else->{
                 return super.onOptionsItemSelected(item)
             }
-
         }
-
     }
 }

@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="admin_bg">#147E8C</color>
+
+    <color name="login_form">#ccffffff</color>
+    <color name="login_form_light">#1affffff</color>
+    <color name="login_form_medium">#66ffffff</color>
 </resources>

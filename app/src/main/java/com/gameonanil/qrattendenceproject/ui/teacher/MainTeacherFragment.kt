@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
@@ -32,6 +33,7 @@ class MainTeacherFragment : Fragment() {
     private lateinit var adapter: AttendanceAdapter
     private lateinit var attendanceList: MutableList<User>
     private lateinit var teacherId: String
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
 
     override fun onCreateView(
@@ -43,7 +45,12 @@ class MainTeacherFragment : Fragment() {
 
         /**Setting Up Toolbar*/
         val navHostFragment = NavHostFragment.findNavController(this);
-        NavigationUI.setupWithNavController(binding.toolbarTeacherMain, navHostFragment)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.mainTeacherFragment,
+            )
+        )
+        NavigationUI.setupWithNavController(binding.toolbarTeacherMain, navHostFragment,appBarConfiguration)
+
 
         /** TO USE OPTIONS MENU*/
         setHasOptionsMenu(true)

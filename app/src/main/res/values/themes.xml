@@ -11,4 +11,13 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.QrAttendenceProject.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.QrAttendenceProject.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.QrAttendenceProject.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

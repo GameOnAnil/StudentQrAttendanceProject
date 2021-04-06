@@ -6,9 +6,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
@@ -28,6 +29,7 @@ class GeneratorFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +39,11 @@ class GeneratorFragment : Fragment() {
         _binding = FragmentGeneratorBinding.inflate(layoutInflater,container,false)
 
         val navHostFragment = NavHostFragment.findNavController(this);
-        NavigationUI.setupWithNavController(binding.toolbarTeacherGenerate, navHostFragment)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.mainTeacherFragment,
+            )
+        )
+        NavigationUI.setupWithNavController(binding.toolbarTeacherGenerate, navHostFragment,appBarConfiguration)
 
         /** TO USE OPTIONS MENU*/
         setHasOptionsMenu(true)
