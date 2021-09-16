@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 
-class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendenceClickListener {
+class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListener {
     companion object{
         private const val TAG = "MainTeacherFragment"
     }
@@ -95,18 +95,13 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendenceClickListe
             }
         }
 
-
-
-
-
         return binding.root
     }
-
+//handling options menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.itemLogout) {
@@ -126,9 +121,13 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendenceClickListe
         _binding = null
     }
 
-    override fun handleItemClicked(position: Int) {
-        Toast.makeText(activity, "Position Clicked= $position", Toast.LENGTH_SHORT).show()
-        Log.d(TAG, "handleItemClicked: item clicked at $position")
+    override fun handleItemClicked(position: Int,user: User) {
+        Toast.makeText(activity, "Position Clicked= $position  Name = ${user.username}", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "handleItemClicked: item clicked at $user")
+
+
+        val action = MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user)
+        findNavController().navigate(action)
     }
 
     override fun handleDeleteClicked(position: Int) {

@@ -1,7 +1,14 @@
 package com.gameonanil.qrattendenceproject.model
 
-data class User(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
+ data class User(
+    val uid: String? = "",
     val username: String? ="",
     val email: String? ="",
+    val password: String?="",
     val user_type: String?=""
-)
+): Parcelable

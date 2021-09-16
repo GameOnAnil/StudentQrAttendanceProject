@@ -15,10 +15,23 @@
             app:destination="@id/generatorFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_mainTeacherFragment_to_studentsDetailFragment"
+            app:destination="@id/studentsDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatorFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.GeneratorFragment"
         android:label="fragment_generator"
         tools:layout="@layout/fragment_generator" />
+    <fragment
+        android:id="@+id/studentsDetailFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.StudentsDetailFragment"
+        android:label="fragment_students_detail"
+        tools:layout="@layout/fragment_students_detail" >
+        <argument
+            android:name="userDetail"
+            app:argType="com.gameonanil.qrattendenceproject.model.User"/>
+
+    </fragment>
 </navigation>

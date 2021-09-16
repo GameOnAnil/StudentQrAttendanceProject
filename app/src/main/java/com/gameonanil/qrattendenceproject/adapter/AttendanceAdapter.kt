@@ -12,7 +12,7 @@ import com.gameonanil.qrattendenceproject.model.User
 class AttendanceAdapter(
     private val context: Context,
     private val userList: List<User>,
-    private val listener: OnAttendenceClickListener
+    private val listener: OnAttendanceClickListener
 ) :
     RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder>() {
 
@@ -47,15 +47,16 @@ class AttendanceAdapter(
 
         override fun onClick(v: View?) {
             val position = adapterPosition
+            val user = userList[position]
             if (position !=RecyclerView.NO_POSITION){
-                listener.handleItemClicked(position)
+                listener.handleItemClicked(position,user)
             }
         }
 
     }
 
-    interface OnAttendenceClickListener {
-        fun handleItemClicked(position: Int)
+    interface OnAttendanceClickListener {
+        fun handleItemClicked(position: Int,user:User)
         fun handleDeleteClicked(position: Int)
     }
 }
