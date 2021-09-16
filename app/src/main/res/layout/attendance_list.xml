@@ -12,4 +12,13 @@
         android:textColor="@color/black"
         android:padding="8dp"/>
 
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/edit_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:layout_alignEnd="@id/tvUserName"
+        android:padding="8dp"
+        />
 </RelativeLayout>

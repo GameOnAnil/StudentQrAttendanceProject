@@ -60,15 +60,15 @@ class AdminActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        return when(item.itemId){
             R.id.itemLogout ->{
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-                return true
+                true
             }
             else->{
-                return super.onOptionsItemSelected(item)
+                super.onOptionsItemSelected(item)
             }
         }
     }

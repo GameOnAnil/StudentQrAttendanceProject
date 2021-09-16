@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -20,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 
 
-class MainTeacherFragment : Fragment() {
+class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendenceClickListener {
     companion object{
         private const val TAG = "MainTeacherFragment"
     }
@@ -64,7 +65,7 @@ class MainTeacherFragment : Fragment() {
         attendanceList = mutableListOf()
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        adapter = AttendanceAdapter(requireActivity(),attendanceList)
+        adapter = AttendanceAdapter(requireActivity(),attendanceList,this)
 
         binding.recyclerTeacher.adapter = adapter
 
@@ -124,5 +125,15 @@ class MainTeacherFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun handleItemClicked(position: Int) {
+        Toast.makeText(activity, "Position Clicked= $position", Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "handleItemClicked: item clicked at $position")
+    }
+
+    override fun handleDeleteClicked(position: Int) {
+        Log.d(TAG, "handleDeleteClicked: delete clicked!!!!!!!!!!!!!")
+    }
+
 
 }
