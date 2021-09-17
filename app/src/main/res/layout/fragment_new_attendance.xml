@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.teacher.MainTeacherFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -17,6 +18,7 @@
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
         <TextView
+            android:id="@+id/toolbar_Text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Attendance at :"
@@ -25,6 +27,15 @@
             android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerNewList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_new_attendance"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="10"
+        tools:listitem="@layout/attendance_list" />
 
 
 </RelativeLayout>
