@@ -14,6 +14,9 @@ import com.gameonanil.qrattendenceproject.R
 
 import com.gameonanil.qrattendenceproject.databinding.FragmentStudentsDetailBinding
 import com.gameonanil.qrattendenceproject.model.User
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 
 class StudentsDetailFragment : Fragment() {
@@ -54,7 +57,12 @@ class StudentsDetailFragment : Fragment() {
         currentUser = StudentsDetailFragmentArgs.fromBundle(requireArguments()).userDetail
         Log.d(TAG, "onCreateView: USER!!!!!!!!!!!!!!!!!!${currentUser.username}")
 
-        binding.textTv.text = currentUser.username!!.toString()
+        binding.apply {
+            currentUser.username?.let { tvUserName.text = "User Name: $it" }
+            currentUser.email?.let { tvEmail.text = "Email: $it" }
+            
+
+        }
 
 
         return binding.root

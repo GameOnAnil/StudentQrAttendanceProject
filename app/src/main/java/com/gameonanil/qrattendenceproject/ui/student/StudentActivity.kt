@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class StudentActivity : AppCompatActivity() {
@@ -68,11 +70,18 @@ class StudentActivity : AppCompatActivity() {
     private fun addStudentToDb(teacherId: String) {
         val currentUser = auth.currentUser
 
+
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
         firestore.collection("users").document(currentUser!!.uid).get().addOnSuccessListener {
             val userdata =  it.toObject(User::class.java)
 
             val docRef =  collectionRef
                 .document(teacherId)
+                .collection("date")
+                .document(formattedDate.toString())
                 .collection("student_list")
                 .document(currentUser.uid)
 

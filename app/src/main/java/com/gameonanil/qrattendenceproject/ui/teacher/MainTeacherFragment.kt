@@ -18,16 +18,17 @@ import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListener {
-    companion object{
+    companion object {
         private const val TAG = "MainTeacherFragment"
     }
 
     private var _binding: FragmentMainTeacherBinding? = null
-    private val binding get()= _binding!!
+    private val binding get() = _binding!!
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
@@ -47,10 +48,15 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         /**Setting Up Toolbar*/
         val navHostFragment = NavHostFragment.findNavController(this);
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.mainTeacherFragment,
+            setOf(
+                R.id.mainTeacherFragment,
             )
         )
-        NavigationUI.setupWithNavController(binding.toolbarTeacherMain, navHostFragment,appBarConfiguration)
+        NavigationUI.setupWithNavController(
+            binding.toolbarTeacherMain,
+            navHostFragment,
+            appBarConfiguration
+        )
 
 
         /** TO USE OPTIONS MENU*/
@@ -65,16 +71,27 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         attendanceList = mutableListOf()
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        adapter = AttendanceAdapter(requireActivity(),attendanceList,this)
+        adapter = AttendanceAdapter(requireActivity(), attendanceList, this)
 
         binding.recyclerTeacher.adapter = adapter
 
         teacherId = auth.currentUser!!.uid
 
-        val collection = firestore.collection("attendance").document(teacherId).collection("student_list")
-        collection.addSnapshotListener{snapshot,exception->
-            if (exception !=null || snapshot == null){
-                Log.e(TAG, "onCreate: Exception: $exception", )
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
+
+        val collection = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("date")
+            .document(formattedDate)
+            .collection("student_list")
+
+            collection.addSnapshotListener { snapshot, exception ->
+            if (exception != null || snapshot == null) {
+                Log.e(TAG, "onCreate: Exception: $exception")
                 return@addSnapshotListener
             }
 
@@ -90,14 +107,16 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         binding.apply {
             fabTeacher.setOnClickListener {
-                val action = MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment()
+                val action =
+                    MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment()
                 findNavController().navigate(action)
             }
         }
 
         return binding.root
     }
-//handling options menu
+
+    //handling options menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -121,12 +140,17 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         _binding = null
     }
 
-    override fun handleItemClicked(position: Int,user: User) {
-        Toast.makeText(activity, "Position Clicked= $position  Name = ${user.username}", Toast.LENGTH_SHORT).show()
+    override fun handleItemClicked(position: Int, user: User) {
+        Toast.makeText(
+            activity,
+            "Position Clicked= $position  Name = ${user.username}",
+            Toast.LENGTH_SHORT
+        ).show()
         Log.d(TAG, "handleItemClicked: item clicked at $user")
 
 
-        val action = MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user)
+        val action =
+            MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user)
         findNavController().navigate(action)
     }
 
