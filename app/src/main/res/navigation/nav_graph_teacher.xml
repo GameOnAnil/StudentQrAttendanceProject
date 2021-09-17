@@ -50,5 +50,10 @@
         android:id="@+id/newAttendance"
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.NewAttendanceFragment"
         android:label="fragment_new_attendance"
-        tools:layout="@layout/fragment_new_attendance" />
+        tools:layout="@layout/fragment_new_attendance">
+
+        <argument
+            android:name="dateText"
+            app:argType="string"/>
+    </fragment>
 </navigation>

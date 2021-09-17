@@ -53,7 +53,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
         val navHostFragment = NavHostFragment.findNavController(this);
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.newAttendance,
+                R.id.mainTeacherFragment,
             )
         )
         NavigationUI.setupWithNavController(
@@ -76,15 +76,19 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         adapter = NewAttendanceAdapter(requireActivity(), attendanceList, this)
-
         binding.recyclerNewList.adapter = adapter
-
         teacherId = auth.currentUser!!.uid
 
 
-        val dummyDate ="2021.09.16"
-        if (dummyDate.isNotEmpty()){
-            binding.toolbarText.text = "Attendance at : $dummyDate"
+        val dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
+        getDataFromDb(dateText)
+
+        return binding.root
+    }
+
+    private fun getDataFromDb(dateText: String){
+        if (dateText.isNotEmpty()){
+            binding.toolbarText.text = "Attendance at : $dateText"
         }
 
 
@@ -92,7 +96,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
             .collection("attendance")
             .document(teacherId)
             .collection("date")
-            .document(dummyDate)
+            .document(dateText)
             .collection("student_list")
 
         collection.addSnapshotListener { snapshot, exception ->
@@ -100,8 +104,6 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
                 Log.e(TAG, "onCreate: Exception: $exception")
                 return@addSnapshotListener
             }
-
-
             val userFromDb = snapshot.toObjects(User::class.java)
 
             attendanceList.clear()
@@ -109,17 +111,8 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
             adapter.notifyDataSetChanged()
 
         }
-
-
-        return binding.root
     }
 
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun handleItemClicked(position: Int, user: User) {
         Log.d(TAG, "handleItemClicked: item clicked")
@@ -129,6 +122,31 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
     override fun handleDeleteClicked(position: Int) {
         Log.d(TAG, "handleDeleteClicked: item  trying to delete")
         TODO("Not yet implemented")
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_logout, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.itemLogout) {
+            Log.d(TAG, "onOptionsItemSelected: logout pressed")
+
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
