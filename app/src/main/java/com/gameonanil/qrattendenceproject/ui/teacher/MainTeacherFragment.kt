@@ -131,6 +131,11 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             startActivity(intent)
             requireActivity().finish()
         }
+
+        if(item.itemId == R.id.itemSearchAttendance){
+            val action = MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment()
+            findNavController().navigate(action)
+        }
         return super.onOptionsItemSelected(item)
     }
 

@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_mainTeacherFragment_to_studentsDetailFragment"
             app:destination="@id/studentsDetailFragment" />
+        <action
+            android:id="@+id/action_mainTeacherFragment_to_searchAttendanceFragment"
+            app:destination="@id/searchAttendanceFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatorFragment"
@@ -34,4 +37,18 @@
             app:argType="com.gameonanil.qrattendenceproject.model.User"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/searchAttendanceFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.SearchAttendanceFragment"
+        android:label="fragment_search_attendance"
+        tools:layout="@layout/fragment_search_attendance" >
+        <action
+            android:id="@+id/action_searchAttendanceFragment_to_newAttendance"
+            app:destination="@id/newAttendance" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAttendance"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.NewAttendance"
+        android:label="fragment_new_attendance"
+        tools:layout="@layout/fragment_new_attendance" />
 </navigation>
