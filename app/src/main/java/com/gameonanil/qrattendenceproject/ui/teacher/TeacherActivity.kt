@@ -1,7 +1,9 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.fragment.NavHostFragment
@@ -17,5 +19,4 @@ class TeacherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_teacher)
 
     }
-
 }

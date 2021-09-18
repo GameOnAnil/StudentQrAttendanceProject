@@ -58,5 +58,6 @@ class AttendanceAdapter(
     interface OnAttendanceClickListener {
         fun handleItemClicked(position: Int,user:User)
         fun handleDeleteClicked(position: Int)
+
     }
 }

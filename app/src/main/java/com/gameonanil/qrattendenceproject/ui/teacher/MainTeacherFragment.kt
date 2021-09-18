@@ -1,5 +1,6 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -17,11 +18,14 @@ import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
 import com.gameonanil.qrattendenceproject.model.User
+
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 
 class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListener {
@@ -179,20 +183,26 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         val builder = AlertDialog.Builder(requireActivity())
         builder.setMessage("Are you sure you want to delete this student?")
-            .setPositiveButton("Yes") { dialog_: DialogInterface, i: Int ->
+            .setPositiveButton("Yes") { _: DialogInterface, _: Int ->
                 collection.document(currentUid)
                     .delete()
                     .addOnSuccessListener {
                         adapter.notifyDataSetChanged()
                         Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                        Toast.makeText(requireActivity(), "Student Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
-            }.setNegativeButton("No",DialogInterface.OnClickListener { dialog, which ->
-                dialog.dismiss()
-            })
-        builder.create().show()
+                        Toast.makeText(
+                            requireActivity().applicationContext,
+                            "Student Deleted Successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error deleting document", e)
+                    }
+            }.setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
 
 
     }

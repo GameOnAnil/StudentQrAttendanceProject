@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -40,6 +41,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
     private lateinit var auth: FirebaseAuth
     private lateinit var attendanceList: MutableList<User>
     private lateinit var teacherId: String
+    public lateinit var dateText: String
 
 
     override fun onCreateView(
@@ -80,7 +82,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
         teacherId = auth.currentUser!!.uid
 
 
-        val dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
+        dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
         getDataFromDb(dateText)
 
         return binding.root
@@ -120,8 +122,34 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
     }
 
     override fun handleDeleteClicked(position: Int) {
-        Log.d(TAG, "handleDeleteClicked: item  trying to delete")
-        TODO("Not yet implemented")
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setMessage("Are you sure?")
+            .setNegativeButton("No"){dialog,which->
+                Log.d(TAG, "handleDeleteClicked: ")}
+            .setPositiveButton("Yes"){dialog,listener->
+
+                val collection = firestore
+                    .collection("attendance")
+                    .document(teacherId)
+                    .collection("date")
+                    .document(dateText)
+                    .collection("student_list")
+
+                val currentUid = attendanceList[position].uid.toString().trim()
+
+                collection
+                    .document(currentUid)
+                    .delete()
+                    .addOnSuccessListener {
+                        adapter.notifyDataSetChanged()
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                        Toast.makeText(requireActivity(),"Student Deleted Successfully",Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener {
+                        Log.d(TAG, "handleDeleteClicked: ERROR: ${it.message.toString()}")
+                    }
+            }
+        builder.create().show()
+
     }
 
 
