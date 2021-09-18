@@ -1,10 +1,12 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -89,7 +91,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             .document(formattedDate)
             .collection("student_list")
 
-            collection.addSnapshotListener { snapshot, exception ->
+        collection.addSnapshotListener { snapshot, exception ->
             if (exception != null || snapshot == null) {
                 Log.e(TAG, "onCreate: Exception: $exception")
                 return@addSnapshotListener
@@ -132,8 +134,9 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             requireActivity().finish()
         }
 
-        if(item.itemId == R.id.itemSearchAttendance){
-            val action = MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment()
+        if (item.itemId == R.id.itemSearchAttendance) {
+            val action =
+                MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment()
             findNavController().navigate(action)
         }
         return super.onOptionsItemSelected(item)
@@ -161,6 +164,37 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
     override fun handleDeleteClicked(position: Int) {
         Log.d(TAG, "handleDeleteClicked: delete clicked!!!!!!!!!!!!!")
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
+        val collection = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("date")
+            .document(formattedDate)
+            .collection("student_list")
+
+        val currentUid = attendanceList[position].uid.toString().trim()
+
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setMessage("Are you sure you want to delete this student?")
+            .setPositiveButton("Yes") { dialog_: DialogInterface, i: Int ->
+                collection.document(currentUid)
+                    .delete()
+                    .addOnSuccessListener {
+                        adapter.notifyDataSetChanged()
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!")
+                        Toast.makeText(requireActivity(), "Student Deleted Successfully", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+            }.setNegativeButton("No",DialogInterface.OnClickListener { dialog, which ->
+                dialog.dismiss()
+            })
+        builder.create().show()
+
+
+
     }
 
 
