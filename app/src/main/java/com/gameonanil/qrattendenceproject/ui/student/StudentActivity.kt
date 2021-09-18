@@ -85,7 +85,7 @@ class StudentActivity : AppCompatActivity() {
                 .collection("student_list")
                 .document(currentUser.uid)
 
-            if (userdata != null) {
+            userdata?.let {
                 docRef.set(userdata).addOnSuccessListener {
                     Toast.makeText(this@StudentActivity, "Student added successfully", Toast.LENGTH_SHORT).show()
                 }
