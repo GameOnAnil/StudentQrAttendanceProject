@@ -44,6 +44,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private lateinit var appBarConfiguration: AppBarConfiguration
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
