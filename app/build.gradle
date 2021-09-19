@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation files('libs\\poi-3.7.jar')
     def nav_version = "2.3.4"
 
 
@@ -68,6 +69,7 @@ dependencies {
     // Kotlin
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
 
 
 

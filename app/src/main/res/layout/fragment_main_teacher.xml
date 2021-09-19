@@ -37,6 +37,16 @@
         tools:itemCount="10"
         tools:listitem="@layout/attendance_list" />
 
+    <Button
+        android:id="@+id/button_download_attendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Attendance"
+        android:layout_toLeftOf="@id/fabTeacher"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabTeacher"
         android:layout_width="wrap_content"
