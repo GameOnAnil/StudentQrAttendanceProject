@@ -22,9 +22,9 @@ import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
 import com.gameonanil.qrattendenceproject.model.User
-
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import org.apache.poi.hssf.usermodel.HSSFCellStyle
 import org.apache.poi.hssf.usermodel.HSSFFont
@@ -38,10 +38,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListener {
@@ -61,7 +59,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private var cell: Cell? = null
     private var row: Row? = null
     private lateinit var defaultStyle: CellStyle
-    private lateinit var currentDate:String
+    private lateinit var currentDate: String
 
 
     override fun onCreateView(
@@ -140,10 +138,14 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             }
 
             buttonDownloadAttendance.setOnClickListener {
-                if(attendanceList.isNotEmpty()){
+                if (attendanceList.isNotEmpty()) {
                     handleDownloadAttendance()
-                }else{
-                    Toast.makeText(requireContext(), "No Attendance to Download", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "No Attendance to Download",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             }
@@ -176,7 +178,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         return super.onOptionsItemSelected(item)
     }
 
-    private fun handleDownloadAttendance(){
+    private fun handleDownloadAttendance() {
         val wb = HSSFWorkbook()
         val sheet = wb.createSheet()
 
@@ -218,7 +220,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         defaultStyle = cellStyle2
         for (i in attendanceList.indices) {
-            row = sheet.createRow(i+1)
+            row = sheet.createRow(i + 1)
 
             cell = row!!.createCell(0);
             cell?.setCellValue(attendanceList[i].roll)
@@ -251,7 +253,10 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 Log.d(TAG, "createExcel: new way called")
                 val resolver = requireActivity().applicationContext.contentResolver
                 val contentValues = ContentValues()
-                contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, "Attendance_$currentDate.xls")
+                contentValues.put(
+                    MediaStore.Files.FileColumns.DISPLAY_NAME,
+                    "Attendance_$currentDate.xls"
+                )
                 contentValues.put(
                     MediaStore.Files.FileColumns.MIME_TYPE,
                     "application/vnd.ms-excel"
@@ -281,9 +286,47 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-        }catch (io: IOException){
+        } catch (io: IOException) {
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun decreaseTotalAttendance(studentId: String) {
+        Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
+        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
+        teacherReference.get().addOnSuccessListener {
+            val currentTeacher = it.toObject(User::class.java)
+            val subject = currentTeacher!!.subject
+            Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
+            if (subject!!.isNotEmpty()) {
+                val studentDocRef = firestore.collection("student")
+                    .document(studentId)
+                    .collection("subject")
+                    .document(subject.trim())
+                Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
+
+                studentDocRef.get().addOnCompleteListener { docSnapshot ->
+                    /** When student subject attendance count exists**/
+                    if (docSnapshot.result!!.exists()) {
+                        Log.d(TAG, "decreaseTotalAttendance:  EXIST")
+                        val totalAttendance =
+                            docSnapshot.result!!["total_attendance"].toString().toInt()
+                        if (totalAttendance > 0) {
+                            studentDocRef.update("total_attendance", FieldValue.increment(-1))
+                            Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
+                        }
+
+                    }
+                }
+
+
+            } else {
+                Log.d(TAG, "increaseTotalAttendance: Error: Coundn't find subject")
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onDestroyView() {
@@ -325,6 +368,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                             "Student Deleted Successfully",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        decreaseTotalAttendance(currentUid)
 
                     }
                     .addOnFailureListener { e ->

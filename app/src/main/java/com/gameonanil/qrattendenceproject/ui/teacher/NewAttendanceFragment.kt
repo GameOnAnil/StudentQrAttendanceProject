@@ -22,6 +22,7 @@ import com.gameonanil.qrattendenceproject.databinding.FragmentNewAttendanceBindi
 import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import org.apache.poi.hssf.usermodel.HSSFCellStyle
 import org.apache.poi.hssf.usermodel.HSSFFont
@@ -179,6 +180,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                             "Student Deleted Successfully",
                             Toast.LENGTH_SHORT
                         ).show()
+
+                        decreaseTotalAttendance(currentUid)
                     }.addOnFailureListener {
                         Log.d(TAG, "handleDeleteClicked: ERROR: ${it.message.toString()}")
                     }
@@ -296,6 +299,44 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         } catch (io: IOException) {
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun decreaseTotalAttendance(studentId: String) {
+        Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
+        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
+        teacherReference.get().addOnSuccessListener {
+            val currentTeacher = it.toObject(User::class.java)
+            val subject = currentTeacher!!.subject
+            Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
+            if (subject!!.isNotEmpty()) {
+                val studentDocRef = firestore.collection("student")
+                    .document(studentId)
+                    .collection("subject")
+                    .document(subject.trim())
+                Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
+
+                studentDocRef.get().addOnCompleteListener { docSnapshot ->
+                    /** When student subject attendance count exists**/
+                    if (docSnapshot.result!!.exists()) {
+                        Log.d(TAG, "decreaseTotalAttendance:  EXIST")
+                        val totalAttendance =
+                            docSnapshot.result!!["total_attendance"].toString().toInt()
+                        if (totalAttendance > 0) {
+                            studentDocRef.update("total_attendance", FieldValue.increment(-1))
+                            Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
+                        }
+
+                    }
+                }
+
+
+            } else {
+                Log.d(TAG, "increaseTotalAttendance: Error: Coundn't find subject")
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
