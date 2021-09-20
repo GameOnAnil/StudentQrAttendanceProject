@@ -1,5 +1,6 @@
 package com.gameonanil.qrattendenceproject.ui.teacher
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.gameonanil.qrattendenceproject.databinding.FragmentStudentsDetailBind
 import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
@@ -29,10 +31,11 @@ class StudentsDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
     private lateinit var currentUser : User
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
-
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,9 +61,33 @@ class StudentsDetailFragment : Fragment() {
         currentUser = StudentsDetailFragmentArgs.fromBundle(requireArguments()).userDetail
         Log.d(TAG, "onCreateView: USER!!!!!!!!!!!!!!!!!!${currentUser.username}")
 
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+
         binding.apply {
             currentUser.username?.let { tvUserName.text = "User Name: $it" }
             currentUser.email?.let { tvEmail.text = "Email: $it" }
+            currentUser.phone?.let{tvPhone.text = "Contact No. : $it"}
+
+
+            val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
+            teacherReference.get().addOnSuccessListener {
+                val currentTeacher = it.toObject(User::class.java)
+                val subject = currentTeacher!!.subject
+                val studentUid = currentUser.uid
+                val docRef = firestore.collection("student")
+                    .document(studentUid!!)
+                    .collection("subject")
+                    .document(subject!!.trim())
+                docRef.get().addOnSuccessListener { documentSnapshot->
+                    if (documentSnapshot.exists()){
+                        val totalAttendance = documentSnapshot["total_attendance"].toString()
+                        if (totalAttendance.isNotEmpty()){
+                            tvTotalAttendance.text = "Total Attendance:  $totalAttendance"
+                        }
+                    }
+                }
+            }
             
 
         }
