@@ -12,6 +12,7 @@ import kotlinx.parcelize.Parcelize
     val phone: String?="",
     val email: String? ="",
     val password: String?="",
-    val user_type: String?=""
+    val user_type: String?="",
+    val subject:String?=""
 
 ): Parcelable
