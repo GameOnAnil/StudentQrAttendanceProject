@@ -10,17 +10,14 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
-import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
-
 import com.gameonanil.qrattendenceproject.adapter.NewAttendanceAdapter
-import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
 import com.gameonanil.qrattendenceproject.databinding.FragmentNewAttendanceBinding
 import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
@@ -38,11 +35,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.text.SimpleDateFormat
 import java.util.*
 
-class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickListener {
-    companion object{
+class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClickListener {
+    companion object {
         private const val TAG = "NewAttendanceFragment"
     }
 
@@ -61,7 +57,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
     private var cell: Cell? = null
     private var row: Row? = null
     private lateinit var defaultStyle: CellStyle
-    private lateinit var currentDate:String
+    private lateinit var currentDate: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,9 +103,9 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
             recyclerNewList.adapter = adapter
 
             buttonSave.setOnClickListener {
-                if(attendanceList.isNotEmpty()){
+                if (attendanceList.isNotEmpty()) {
                     handleDownloadAttendance()
-                }else{
+                } else {
                     Toast.makeText(requireContext(), "Attendance Empty", Toast.LENGTH_SHORT).show()
                     Log.d(TAG, "onCreateView: attendance list empty!!!!!!!")
                 }
@@ -120,8 +116,8 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
         return binding.root
     }
 
-    private fun getDataFromDb(dateText: String){
-        if (dateText.isNotEmpty()){
+    private fun getDataFromDb(dateText: String) {
+        if (dateText.isNotEmpty()) {
             binding.toolbarText.text = "Attendance at : $dateText"
         }
 
@@ -149,16 +145,19 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
 
 
     override fun handleItemClicked(position: Int, user: User) {
-        Log.d(TAG, "handleItemClicked: item clicked")
-        TODO("Not yet implemented")
+        val currentUser = attendanceList[position]
+        val action =
+            NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser)
+        findNavController().navigate(action)
     }
 
     override fun handleDeleteClicked(position: Int) {
         val builder = AlertDialog.Builder(requireActivity())
         builder.setMessage("Are you sure?")
-            .setNegativeButton("No"){dialog,which->
-                Log.d(TAG, "handleDeleteClicked: ")}
-            .setPositiveButton("Yes"){dialog,listener->
+            .setNegativeButton("No") { dialog, which ->
+                Log.d(TAG, "handleDeleteClicked: ")
+            }
+            .setPositiveButton("Yes") { dialog, listener ->
 
                 val collection = firestore
                     .collection("attendance")
@@ -175,7 +174,11 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
                     .addOnSuccessListener {
                         adapter.notifyDataSetChanged()
                         Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                        Toast.makeText(requireActivity(),"Student Deleted Successfully",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Student Deleted Successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }.addOnFailureListener {
                         Log.d(TAG, "handleDeleteClicked: ERROR: ${it.message.toString()}")
                     }
@@ -184,7 +187,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
 
     }
 
-    private fun handleDownloadAttendance(){
+    private fun handleDownloadAttendance() {
         val wb = HSSFWorkbook()
         val sheet = wb.createSheet()
 
@@ -225,7 +228,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
 
         defaultStyle = cellStyle2
         for (i in attendanceList.indices) {
-            row = sheet.createRow(i+1)
+            row = sheet.createRow(i + 1)
 
             cell = row!!.createCell(0);
             cell?.setCellValue(attendanceList[i].roll)
@@ -256,7 +259,10 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
                 Log.d(TAG, "createExcel: new way called")
                 val resolver = requireActivity().applicationContext.contentResolver
                 val contentValues = ContentValues()
-                contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, "Attendance_$currentDate.xls")
+                contentValues.put(
+                    MediaStore.Files.FileColumns.DISPLAY_NAME,
+                    "Attendance_$currentDate.xls"
+                )
                 contentValues.put(
                     MediaStore.Files.FileColumns.MIME_TYPE,
                     "application/vnd.ms-excel"
@@ -287,7 +293,7 @@ class NewAttendanceFragment : Fragment(),NewAttendanceAdapter.OnAttendanceClickL
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-        }catch (io: IOException){
+        } catch (io: IOException) {
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
         }
     }

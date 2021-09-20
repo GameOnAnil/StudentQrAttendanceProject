@@ -55,5 +55,8 @@
         <argument
             android:name="dateText"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_newAttendance_to_studentsDetailFragment"
+            app:destination="@id/studentsDetailFragment" />
     </fragment>
 </navigation>

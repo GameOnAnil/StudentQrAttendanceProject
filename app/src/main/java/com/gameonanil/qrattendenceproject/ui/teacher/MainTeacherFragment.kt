@@ -292,14 +292,6 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     }
 
     override fun handleItemClicked(position: Int, user: User) {
-        Toast.makeText(
-            activity,
-            "Position Clicked= $position  Name = ${user.username}",
-            Toast.LENGTH_SHORT
-        ).show()
-        Log.d(TAG, "handleItemClicked: item clicked at $user")
-
-
         val action =
             MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user)
         findNavController().navigate(action)
