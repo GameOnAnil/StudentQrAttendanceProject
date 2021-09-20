@@ -86,6 +86,10 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
         DatePickerDialog(requireContext(),this,year,month,day).show()
     }
 
+    override fun onStart() {
+        super.onStart()
+        binding.etEnterDate.setText("")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
