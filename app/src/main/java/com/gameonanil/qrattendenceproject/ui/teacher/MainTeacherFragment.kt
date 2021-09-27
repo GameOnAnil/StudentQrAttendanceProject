@@ -71,6 +71,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         /**Setting Up Toolbar*/
         val navHostFragment = NavHostFragment.findNavController(this);
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.mainTeacherFragment,
@@ -149,6 +150,9 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 }
 
             }
+
+
+
         }
 
         return binding.root

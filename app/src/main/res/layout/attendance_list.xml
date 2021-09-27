@@ -1,24 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    android:elevation="30dp"
+    app:cardCornerRadius="8dp">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvUserName"
-        android:text="User Name"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:padding="8dp"/>
+        android:layout_height="wrap_content">
 
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/edit_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_delete_24"
-        android:layout_alignEnd="@id/tvUserName"
-        android:padding="8dp"
-        />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="User Name"
+            android:textColor="@color/blue3"
+            android:textSize="18sp" />
+
+
+        <ImageButton
+            android:id="@+id/edit_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/tvUserName"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_delete_24"
+            android:backgroundTint="@color/white"
+
+
+            />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
