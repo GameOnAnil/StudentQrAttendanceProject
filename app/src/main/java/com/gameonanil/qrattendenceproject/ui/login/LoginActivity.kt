@@ -119,7 +119,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToTeacherActivity() {
-        Toast.makeText(this@LoginActivity, "goToTeacherActivity", Toast.LENGTH_SHORT).show()
         binding.btnLogin.isEnabled = true
         binding.btnTeacher.isEnabled = true
         binding.btnStudent.isEnabled = true
@@ -130,7 +129,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToStudentActivity() {
-        Toast.makeText(this@LoginActivity, "goToStudentActivity", Toast.LENGTH_SHORT).show()
         binding.btnLogin.isEnabled = true
         binding.btnTeacher.isEnabled = true
         binding.btnStudent.isEnabled = true

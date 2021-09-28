@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/design_default_color_primary"
+        android:layout_weight=".1"
+        android:background="@color/blue3"
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
@@ -26,29 +27,44 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_teacher_generate"
-        android:layout_marginTop="100dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar_teacher_generate">
 
-        <ImageView
-            android:id="@+id/imageViewQR"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_centerInParent="true"
-            tools:src="@drawable/ic_baseline_qr_code_scanner_24" />
-
-        <TextView
+        <RelativeLayout
+            android:id="@+id/rv_generator"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Please Scan this QR Code With Your App."
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:layout_height="0dp"
+            android:layout_weight=".4"
+            android:background="@color/blue3">
+
+            <ImageView
+                android:id="@+id/imageViewQR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:backgroundTint="@color/blue3"
+                tools:src="@drawable/ic_baseline_qr_code_scanner_24" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Please Scan this QR Code With Your App."
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>

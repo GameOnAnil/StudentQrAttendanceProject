@@ -65,9 +65,9 @@ class StudentsDetailFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
 
         binding.apply {
-            currentUser.username?.let { tvUserName.text = "User Name: $it" }
-            currentUser.email?.let { tvEmail.text = "Email: $it" }
-            currentUser.phone?.let{tvPhone.text = "Contact No. : $it"}
+            currentUser.username?.let { tvUserName.text = it}
+            currentUser.email?.let { tvEmail.text = it}
+            currentUser.phone?.let{tvPhone.text = it}
 
 
             val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
@@ -83,7 +83,7 @@ class StudentsDetailFragment : Fragment() {
                     if (documentSnapshot.exists()){
                         val totalAttendance = documentSnapshot["total_attendance"].toString()
                         if (totalAttendance.isNotEmpty()){
-                            tvTotalAttendance.text = "Total Attendance:  $totalAttendance"
+                            tvTotalAttendance.text = totalAttendance.toString()
                         }
                     }
                 }
