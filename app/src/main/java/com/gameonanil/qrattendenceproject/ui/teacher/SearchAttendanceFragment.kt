@@ -69,7 +69,7 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
                 }
             }
 
-            buttonPickDate.setOnClickListener {
+            etEnterDate.setOnClickListener {
                 pickDate()
             }
         }
