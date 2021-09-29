@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
     tools:context=".ui.login.LoginActivity">
-
+<!-- layout details -->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_login"
