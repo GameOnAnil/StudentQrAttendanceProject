@@ -6,7 +6,7 @@
         android:title="Search Attendance"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"/>
-
+<!--  -->  
     <item
         android:id="@+id/itemLogout"
         android:title="Log out"
