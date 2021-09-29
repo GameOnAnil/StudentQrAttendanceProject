@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/blue3"
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:id="@+id/toolbar_Text"
@@ -34,18 +34,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_new_attendance"
         android:layout_above="@+id/button_save"
+        android:layout_marginBottom="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="10"
+        tools:itemCount="20"
         tools:listitem="@layout/attendance_list" />
 
     <Button
+        android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button_save"
-        android:text="Download Attendance"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/round_button"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Download Attendance"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="19sp"
+        android:layout_centerInParent="true"/>
 
 
 </RelativeLayout>

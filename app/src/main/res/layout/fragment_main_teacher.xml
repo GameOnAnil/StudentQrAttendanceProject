@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/blue3"
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
@@ -32,21 +32,27 @@
         android:id="@+id/recyclerTeacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_teacher_main"
         android:layout_above="@id/fabTeacher"
+        android:layout_below="@id/toolbar_teacher_main"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="10"
+        tools:itemCount="20"
         tools:listitem="@layout/attendance_list" />
 
     <Button
         android:id="@+id/button_download_attendance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Download Attendance"
-        android:layout_toLeftOf="@id/fabTeacher"
         android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_toLeftOf="@id/fabTeacher"
+        android:background="@drawable/round_button"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Download Attendance"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="19sp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabTeacher"
@@ -55,6 +61,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/blue3"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:src="@drawable/ic_qr_scan" />
 
 </RelativeLayout>
