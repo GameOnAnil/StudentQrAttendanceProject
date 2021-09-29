@@ -16,7 +16,7 @@
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
@@ -27,6 +27,14 @@
             android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <ProgressBar
+        android:id="@+id/progressbar_student_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:elevation="50dp"
+        android:indeterminateTint="@color/blue3" />
 
     <ImageView
         android:id="@+id/profile_image"
@@ -72,7 +80,10 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     tools:text="Anil Thapa" />
@@ -98,7 +109,10 @@
                     android:id="@+id/tvEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     tools:text="gameonanil@gmail.com"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
@@ -123,7 +137,10 @@
                     android:id="@+id/tvAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     tools:text="Thimi, Bhaktapur"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
@@ -148,7 +165,10 @@
                     android:id="@+id/tvPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     tools:text="985123113"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
@@ -173,7 +193,10 @@
                     android:id="@+id/tvTotalAttendance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp"
                     tools:text="10"
                     android:textColor="@color/black"
                     android:textSize="18sp" />

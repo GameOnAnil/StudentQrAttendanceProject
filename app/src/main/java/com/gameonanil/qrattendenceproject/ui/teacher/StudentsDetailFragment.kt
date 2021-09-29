@@ -5,8 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -68,6 +70,7 @@ class StudentsDetailFragment : Fragment() {
             currentUser.username?.let { tvUserName.text = it}
             currentUser.email?.let { tvEmail.text = it}
             currentUser.phone?.let{tvPhone.text = it}
+            currentUser.address?.let{tvAddress.text = it}
 
 
             val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
@@ -86,7 +89,14 @@ class StudentsDetailFragment : Fragment() {
                             tvTotalAttendance.text = totalAttendance.toString()
                         }
                     }
+                    binding.progressbarStudentDetail.isVisible = false
+                }.addOnFailureListener {
+                    Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+                    binding.progressbarStudentDetail.isVisible = false
                 }
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+                binding.progressbarStudentDetail.isVisible = false
             }
             
 

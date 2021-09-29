@@ -2,6 +2,7 @@ package com.gameonanil.qrattendenceproject.ui.student
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -9,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.ActivityStudentBinding
 import com.gameonanil.qrattendenceproject.model.User
@@ -32,11 +34,12 @@ class StudentActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var collectionRef: CollectionReference
     private lateinit var currentUid: String
+    private lateinit var binding: ActivityStudentBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityStudentBinding.inflate(layoutInflater)
+        binding = ActivityStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarStudent)
@@ -55,9 +58,35 @@ class StudentActivity : AppCompatActivity() {
                 scanner.initiateScan()
             }
         }
+        binding.progressbarStudent.isVisible = true
+        displayStudentDetail()
 
 
     }
+
+    private fun displayStudentDetail() {
+        val userDocRef = firestore.collection("users").document(currentUid)
+        userDocRef.get().addOnSuccessListener { docSnapshot->
+            if (docSnapshot.exists()){
+                val userDetail = docSnapshot.toObject(User::class.java)
+                if (userDetail != null) {
+                    userDetail.username?.let { binding.tvUserName.text = it }
+                    userDetail.email?.let { binding.tvEmail.text = it }
+                    userDetail.roll?.let { binding.tvRoll.text = it }
+                    userDetail.address?.let { binding.tvAddress.text = it }
+                    userDetail.phone?.let { binding.tvPhone.text = it }
+                }
+            }
+
+            binding.progressbarStudent.isVisible = false
+
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error:${it.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "displayStudentDetail: Error:${it.message}")
+            binding.progressbarStudent.isVisible = false
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
@@ -131,7 +160,7 @@ class StudentActivity : AppCompatActivity() {
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->
-/** When student subject attendance count exists**/
+                    /** When student subject attendance count exists**/
                     if (docSnapshot.result!!.exists()) {
                         studentDocRef
                             .update("total_attendance", FieldValue.increment(1))
@@ -139,11 +168,13 @@ class StudentActivity : AppCompatActivity() {
                                 Log.d(TAG, "increaseTotalAttendance: Totalattendance updated")
                             }
                             .addOnFailureListener {
-                                Log.d(TAG,"increaseTotalAttendance: totalattendance not updated:${it.message}"
+                                Log.d(
+                                    TAG,
+                                    "increaseTotalAttendance: totalattendance not updated:${it.message}"
                                 )
                             }
                     }
- /** When student subject attendance count Doesn't exists**/
+                    /** When student subject attendance count Doesn't exists**/
                     else {
                         val attendanceHashMap = hashMapOf<String, Int>("total_attendance" to 1)
                         studentDocRef.set(attendanceHashMap).addOnSuccessListener {

@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
     val uid: String? = "",
     val username: String? ="",
     val roll: String?="",
+    val address: String?="",
     val phone: String?="",
     val email: String? ="",
     val password: String?="",
