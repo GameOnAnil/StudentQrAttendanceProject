@@ -56,17 +56,10 @@ class SemFragment : Fragment(){
         }
 
         mAuth = FirebaseAuth.getInstance()
-        /**SETTING UP DROPDOWN MENU **/
-        val semTypes = resources.getStringArray(R.array.sem_temp)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,semTypes)
 
 
         binding.apply {
-            autoCompleteSemester.setAdapter(arrayAdapter)
             autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
-
-
-
             buttonSemGo.setOnClickListener {
                goToNextPage()
             }
@@ -82,6 +75,7 @@ class SemFragment : Fragment(){
         findNavController().navigate(action)
     }
 
+    /**SETTING UP DROPDOWN MENU **/
     override fun onResume() {
         super.onResume()
         val semTypes = resources.getStringArray(R.array.sem_temp)

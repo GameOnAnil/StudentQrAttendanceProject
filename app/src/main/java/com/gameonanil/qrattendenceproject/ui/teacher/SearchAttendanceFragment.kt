@@ -28,7 +28,8 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    lateinit var dateText: String
+    private lateinit var dateText: String
+    private lateinit var semText: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,12 +58,13 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
         }
 
         dateText = ""
+        semText = SearchAttendanceFragmentArgs.fromBundle(requireArguments()).semText
 
         binding.apply {
             buttonSearchAttendance.setOnClickListener {
                 if(etEnterDate.text!!.isNotBlank()){
                     val action =
-                        SearchAttendanceFragmentDirections.actionSearchAttendanceFragmentToNewAttendance(dateText.toString())
+                        SearchAttendanceFragmentDirections.actionSearchAttendanceFragmentToNewAttendance(dateText,semText)
                     findNavController().navigate(action)
                 }else{
                     Toast.makeText(requireContext(), "Please Enter Date First", Toast.LENGTH_SHORT).show()

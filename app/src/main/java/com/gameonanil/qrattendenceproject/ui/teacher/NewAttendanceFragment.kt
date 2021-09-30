@@ -54,7 +54,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     private lateinit var auth: FirebaseAuth
     private lateinit var attendanceList: MutableList<User>
     private lateinit var teacherId: String
-    lateinit var dateText: String
+    private lateinit var dateText: String
+    private lateinit var semText: String
     private var cell: Cell? = null
     private var row: Row? = null
     private lateinit var defaultStyle: CellStyle
@@ -96,9 +97,12 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         adapter = NewAttendanceAdapter(requireActivity(), attendanceList, this)
         teacherId = auth.currentUser!!.uid
 
+        semText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).semText
         dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
         getDataFromDb(dateText)
         currentDate = dateText
+
+
 
         binding.apply {
             recyclerNewList.adapter = adapter
@@ -126,6 +130,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
+            .collection("semester")
+            .document(semText)
             .collection("date")
             .document(dateText)
             .collection("student_list")

@@ -50,6 +50,10 @@
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.SearchAttendanceFragment"
         android:label="fragment_search_attendance"
         tools:layout="@layout/fragment_search_attendance" >
+        <argument
+            android:name="semText"
+            app:argType="string"
+            />
         <action
             android:id="@+id/action_searchAttendanceFragment_to_newAttendance"
             app:destination="@id/newAttendance" />
@@ -59,10 +63,13 @@
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.NewAttendanceFragment"
         android:label="fragment_new_attendance"
         tools:layout="@layout/fragment_new_attendance">
-
         <argument
             android:name="dateText"
             app:argType="string"/>
+        <argument
+            android:name="semText"
+            app:argType="string"
+            />
         <action
             android:id="@+id/action_newAttendance_to_studentsDetailFragment"
             app:destination="@id/studentsDetailFragment" />

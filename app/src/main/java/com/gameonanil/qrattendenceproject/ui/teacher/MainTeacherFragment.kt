@@ -112,6 +112,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
+            .collection("semester")
+            .document(semText)
             .collection("date")
             .document(formattedDate)
             .collection("student_list")
@@ -177,7 +179,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         if (item.itemId == R.id.itemSearchAttendance) {
             val action =
-                MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment()
+                MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment(semText)
             findNavController().navigate(action)
         }
         return super.onOptionsItemSelected(item)
