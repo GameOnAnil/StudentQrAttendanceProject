@@ -3,6 +3,7 @@ package com.gameonanil.qrattendenceproject.ui.teacher
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 class SemFragment : Fragment() {
+    companion object{
+        private const val TAG = "SemFragment"
+    }
 
     private var _binding: FragmentSemBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +56,7 @@ class SemFragment : Fragment() {
 
         binding.apply {
             buttonSemGo.setOnClickListener {
-                val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment2()
+                val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment("4th")
                 findNavController().navigate(action)
 
             }
@@ -66,7 +70,6 @@ class SemFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout,menu)

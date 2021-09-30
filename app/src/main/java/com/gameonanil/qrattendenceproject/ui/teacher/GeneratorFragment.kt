@@ -30,6 +30,7 @@ class GeneratorFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var semesterText: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,15 +52,13 @@ class GeneratorFragment : Fragment() {
         binding.toolbarTeacherGenerate.setNavigationOnClickListener {
             NavHostFragment.findNavController(this).navigateUp()
         }
-
-
-
         auth = FirebaseAuth.getInstance()
+
+        semesterText = GeneratorFragmentArgs.fromBundle(requireArguments()).semText
 
 
 
         generateOnStart()
-
 
         return binding.root
     }
@@ -67,7 +66,8 @@ class GeneratorFragment : Fragment() {
     private fun generateOnStart(){
         binding.apply {
             val teacherId = auth.currentUser!!.uid
-            val bitmap = generateQRCode(teacherId)
+            val newTeacherId = teacherId+semesterText
+            val bitmap = generateQRCode(newTeacherId)
             imageViewQR.setImageBitmap(bitmap)
         }
     }

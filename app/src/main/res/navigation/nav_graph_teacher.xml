@@ -10,23 +10,31 @@
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragment"
         android:label="fragment_main_teacher"
         tools:layout="@layout/fragment_main_teacher" >
-        <action
-            android:id="@+id/action_mainTeacherFragment_to_generatorFragment"
-            app:destination="@id/generatorFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+
+        <argument
+            android:name="semText"
+            app:argType="string"/>
         <action
             android:id="@+id/action_mainTeacherFragment_to_studentsDetailFragment"
             app:destination="@id/studentsDetailFragment" />
         <action
             android:id="@+id/action_mainTeacherFragment_to_searchAttendanceFragment"
             app:destination="@id/searchAttendanceFragment" />
+        <action
+            android:id="@+id/action_mainTeacherFragment_to_generatorFragment"
+            app:destination="@id/generatorFragment" />
     </fragment>
     <fragment
         android:id="@+id/generatorFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.GeneratorFragment"
         android:label="fragment_generator"
-        tools:layout="@layout/fragment_generator" />
+        tools:layout="@layout/fragment_generator" >
+
+        <argument
+            android:name="semText"
+            app:argType="string"
+            />
+    </fragment>
     <fragment
         android:id="@+id/studentsDetailFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.teacher.StudentsDetailFragment"
@@ -65,7 +73,7 @@
         android:label="fragment_sem"
         tools:layout="@layout/fragment_sem" >
         <action
-            android:id="@+id/action_semFragment_to_mainTeacherFragment2"
+            android:id="@+id/action_semFragment_to_mainTeacherFragment"
             app:destination="@id/mainTeacherFragment" />
     </fragment>
 </navigation>

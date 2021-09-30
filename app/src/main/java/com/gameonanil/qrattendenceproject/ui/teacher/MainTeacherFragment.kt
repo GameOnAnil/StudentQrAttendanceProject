@@ -55,6 +55,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private lateinit var adapter: AttendanceAdapter
     private lateinit var attendanceList: MutableList<User>
     private lateinit var teacherId: String
+    private lateinit var semText: String
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var cell: Cell? = null
     private var row: Row? = null
@@ -91,7 +92,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             NavHostFragment.findNavController(this).navigateUp()
         }
 
-
+        semText = MainTeacherFragmentArgs.fromBundle(requireArguments()).semText
 
         attendanceList = mutableListOf()
         auth = FirebaseAuth.getInstance()
@@ -134,7 +135,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         binding.apply {
             fabTeacher.setOnClickListener {
                 val action =
-                    MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment()
+                    MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment(semText)
                 findNavController().navigate(action)
             }
 

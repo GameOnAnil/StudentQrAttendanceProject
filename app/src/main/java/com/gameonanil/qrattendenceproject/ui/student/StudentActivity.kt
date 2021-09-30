@@ -35,6 +35,7 @@ class StudentActivity : AppCompatActivity() {
     private lateinit var collectionRef: CollectionReference
     private lateinit var currentUid: String
     private lateinit var binding: ActivityStudentBinding
+    private lateinit var semesterTestFromQr : String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +62,7 @@ class StudentActivity : AppCompatActivity() {
         binding.progressbarStudent.isVisible = true
         displayStudentDetail()
 
+       
 
     }
 
@@ -96,8 +98,11 @@ class StudentActivity : AppCompatActivity() {
                     Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
                 } else {
                     Log.d(TAG, "onActivityResult: Scanned:${result.contents}")
-                    val teacherId = result.contents.toString()
-                    addStudentToDb(teacherId)
+                    val teacherIdPlusSem = result.contents.toString()
+                    semesterTestFromQr = getLastNCharsOfString(teacherIdPlusSem,3)
+                    val newTeacherId = teacherIdPlusSem.dropLast(3)
+                    Toast.makeText(this, "Teacher Id:$newTeacherId and Sem=$semesterTestFromQr", Toast.LENGTH_SHORT).show()
+                    addStudentToDb(newTeacherId,semesterTestFromQr)
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data)
@@ -105,7 +110,15 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun addStudentToDb(teacherId: String) {
+    fun getLastNCharsOfString(str: String, n: Int): String {
+        var lastnChars = str
+        if (lastnChars.length > n) {
+            lastnChars = lastnChars.substring(lastnChars.length - n, lastnChars.length)
+        }
+        return lastnChars
+    }
+
+    private fun addStudentToDb(teacherId: String,semText:String) {
 
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
@@ -116,6 +129,8 @@ class StudentActivity : AppCompatActivity() {
 
             val docRef = collectionRef
                 .document(teacherId)
+                .collection("semester")
+                .document(semesterTestFromQr)
                 .collection("date")
                 .document(formattedDate.toString())
                 .collection("student_list")
