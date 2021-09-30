@@ -23,7 +23,8 @@
             android:text="Attendance List"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
     </androidx.appcompat.widget.Toolbar>
 

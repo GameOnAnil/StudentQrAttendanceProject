@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_teacher"
-    app:startDestination="@id/mainTeacherFragment">
+    app:startDestination="@id/semFragment">
 
     <fragment
         android:id="@+id/mainTeacherFragment"
@@ -58,5 +58,14 @@
         <action
             android:id="@+id/action_newAttendance_to_studentsDetailFragment"
             app:destination="@id/studentsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/semFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.SemFragment"
+        android:label="fragment_sem"
+        tools:layout="@layout/fragment_sem" >
+        <action
+            android:id="@+id/action_semFragment_to_mainTeacherFragment2"
+            app:destination="@id/mainTeacherFragment" />
     </fragment>
 </navigation>

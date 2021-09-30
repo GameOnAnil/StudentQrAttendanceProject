@@ -15,7 +15,7 @@
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
@@ -42,8 +42,8 @@
 
             <ImageView
                 android:id="@+id/imageViewQR"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:backgroundTint="@color/blue3"
                 tools:src="@drawable/ic_baseline_qr_code_scanner_24" />
