@@ -3,6 +3,9 @@ package com.gameonanil.qrattendenceproject.ui.teacher
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -16,7 +19,7 @@ import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 
 
-class SemFragment : Fragment() {
+class SemFragment : Fragment(){
     companion object{
         private const val TAG = "SemFragment"
     }
@@ -25,6 +28,7 @@ class SemFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var semText: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,18 +56,37 @@ class SemFragment : Fragment() {
         }
 
         mAuth = FirebaseAuth.getInstance()
+        /**SETTING UP DROPDOWN MENU **/
+        val semTypes = resources.getStringArray(R.array.sem_temp)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,semTypes)
 
 
         binding.apply {
-            buttonSemGo.setOnClickListener {
-                val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment("4th")
-                findNavController().navigate(action)
+            autoCompleteSemester.setAdapter(arrayAdapter)
+            autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
 
+
+
+            buttonSemGo.setOnClickListener {
+               goToNextPage()
             }
         }
 
 
         return binding.root
+    }
+
+    private fun goToNextPage(){
+        semText = binding.autoCompleteSemester.text.toString()
+        val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment(semText)
+        findNavController().navigate(action)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val semTypes = resources.getStringArray(R.array.sem_temp)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,semTypes)
+        binding.autoCompleteSemester.setAdapter(arrayAdapter)
     }
 
     override fun onDestroyView() {
