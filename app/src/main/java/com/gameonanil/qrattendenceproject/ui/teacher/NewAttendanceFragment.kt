@@ -99,6 +99,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
 
         semText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).semText
         dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
+        Toast.makeText(requireContext(), "$dateText and semester $semText", Toast.LENGTH_SHORT).show()
         getDataFromDb(dateText)
         currentDate = dateText
 
@@ -154,7 +155,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     override fun handleItemClicked(position: Int, user: User) {
         val currentUser = attendanceList[position]
         val action =
-            NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser)
+            NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser,semText)
         findNavController().navigate(action)
     }
 
@@ -169,6 +170,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 val collection = firestore
                     .collection("attendance")
                     .document(teacherId)
+                    .collection("semester")
+                    .document(semText)
                     .collection("date")
                     .document(dateText)
                     .collection("student_list")
@@ -313,12 +316,19 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         teacherReference.get().addOnSuccessListener {
             val currentTeacher = it.toObject(User::class.java)
             val subject = currentTeacher!!.subject
+            val semArray = currentTeacher.semester
+            var index: Int? = null
+            for (semIndex in semArray!!.indices){
+                if (semArray[semIndex]==semText){
+                    index=semIndex
+                }
+            }
             Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty()) {
+            if (subject!!.isNotEmpty()||index!=null) {
                 val studentDocRef = firestore.collection("student")
                     .document(studentId)
                     .collection("subject")
-                    .document(subject.trim())
+                    .document(subject[index!!])
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->

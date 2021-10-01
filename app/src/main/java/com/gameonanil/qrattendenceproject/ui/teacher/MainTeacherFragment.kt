@@ -278,7 +278,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 )
                 fos = resolver.openOutputStream(Objects.requireNonNull(excelUri)!!)!!
                 wb.write(fos)
-                Toast.makeText(requireContext(), "EXCEL Saved (New way)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "EXCEL File Saved", Toast.LENGTH_SHORT).show()
             } else {
 
                 val file = File(
@@ -289,7 +289,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 wb.write(outputStream)
 
                 Log.d(TAG, "createExcel: Old way called")
-                Toast.makeText(requireContext(), "File stored (Old way)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Excel File Stored", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -304,12 +304,19 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         teacherReference.get().addOnSuccessListener {
             val currentTeacher = it.toObject(User::class.java)
             val subject = currentTeacher!!.subject
+            val semArray = currentTeacher.semester
+            var index: Int? = null
+            for (semIndex in semArray!!.indices){
+                if (semArray[semIndex]==semText){
+                    index=semIndex
+                }
+            }
             Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty()) {
+            if (subject!!.isNotEmpty()||index!=null) {
                 val studentDocRef = firestore.collection("student")
                     .document(studentId)
                     .collection("subject")
-                    .document(subject.trim())
+                    .document(subject[index!!])
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->
@@ -343,7 +350,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
     override fun handleItemClicked(position: Int, user: User) {
         val action =
-            MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user)
+            MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user,semText)
         findNavController().navigate(action)
     }
 
@@ -356,6 +363,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
+            .collection("semester")
+            .document(semText)
             .collection("date")
             .document(formattedDate)
             .collection("student_list")

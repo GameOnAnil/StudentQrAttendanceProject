@@ -18,6 +18,7 @@ import com.gameonanil.qrattendenceproject.databinding.FragmentSearchAttendanceBi
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
+import java.time.Month
 import java.util.*
 
 
@@ -99,14 +100,15 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        if (month <10){
-            dateText = "$year.0${month+1}.$dayOfMonth"
-            binding.etEnterDate.setText(dateText)
-        }else{
-            dateText = "$year.${month+1}.$dayOfMonth"
-            binding.etEnterDate.setText(dateText)
+        val date = Calendar.getInstance()
+        date.set(Calendar.YEAR,year)
+        date.set(Calendar.MONTH,month)
+        date.set(Calendar.DAY_OF_MONTH,dayOfMonth)
 
-        }
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date.time)
+        dateText = formattedDate
+        binding.etEnterDate.setText(dateText)
 
     }
 

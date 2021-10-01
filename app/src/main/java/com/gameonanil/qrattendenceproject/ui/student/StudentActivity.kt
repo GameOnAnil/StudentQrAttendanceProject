@@ -2,7 +2,6 @@ package com.gameonanil.qrattendenceproject.ui.student
 
 import android.app.Activity
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -35,7 +34,7 @@ class StudentActivity : AppCompatActivity() {
     private lateinit var collectionRef: CollectionReference
     private lateinit var currentUid: String
     private lateinit var binding: ActivityStudentBinding
-    private lateinit var semesterTestFromQr : String
+    private lateinit var semesterTextFromQr : String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,10 +98,10 @@ class StudentActivity : AppCompatActivity() {
                 } else {
                     Log.d(TAG, "onActivityResult: Scanned:${result.contents}")
                     val teacherIdPlusSem = result.contents.toString()
-                    semesterTestFromQr = getLastNCharsOfString(teacherIdPlusSem,3)
+                    semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem,3)
                     val newTeacherId = teacherIdPlusSem.dropLast(3)
-                    Toast.makeText(this, "Teacher Id:$newTeacherId and Sem=$semesterTestFromQr", Toast.LENGTH_SHORT).show()
-                    addStudentToDb(newTeacherId,semesterTestFromQr)
+                    Toast.makeText(this, "Teacher Id:$newTeacherId and Sem=$semesterTextFromQr", Toast.LENGTH_SHORT).show()
+                    addStudentToDb(newTeacherId,semesterTextFromQr)
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data)
@@ -130,7 +129,7 @@ class StudentActivity : AppCompatActivity() {
             val docRef = collectionRef
                 .document(teacherId)
                 .collection("semester")
-                .document(semesterTestFromQr)
+                .document(semesterTextFromQr)
                 .collection("date")
                 .document(formattedDate.toString())
                 .collection("student_list")
@@ -161,17 +160,24 @@ class StudentActivity : AppCompatActivity() {
 
     }
 
-    private fun increaseTotalAttendance(teacherId: String) {
+   private fun increaseTotalAttendance(teacherId: String) {
         val teacherReference = firestore.collection("users").document(teacherId)
         teacherReference.get().addOnSuccessListener {
             val currentTeacher = it.toObject(User::class.java)
             val subject = currentTeacher!!.subject
+            val semArray = currentTeacher.semester
+            var index: Int? = null
+            for (semIndex in semArray!!.indices){
+                if (semArray[semIndex]==semesterTextFromQr){
+                    index=semIndex
+                }
+            }
             Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty()) {
+            if (subject!!.isNotEmpty()||index!=null) {
                 val studentDocRef = firestore.collection("student")
                     .document(currentUid)
                     .collection("subject")
-                    .document(subject.trim())
+                    .document(subject[index!!])
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->

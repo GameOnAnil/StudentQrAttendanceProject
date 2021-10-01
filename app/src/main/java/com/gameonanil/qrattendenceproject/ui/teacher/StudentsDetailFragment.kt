@@ -36,6 +36,7 @@ class StudentsDetailFragment : Fragment() {
     private lateinit var currentUser : User
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var semText:String
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -65,6 +66,8 @@ class StudentsDetailFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+        semText = StudentsDetailFragmentArgs.fromBundle(requireArguments()).semText
+
 
         binding.apply {
             currentUser.username?.let { tvUserName.text = it}
@@ -77,11 +80,18 @@ class StudentsDetailFragment : Fragment() {
             teacherReference.get().addOnSuccessListener {
                 val currentTeacher = it.toObject(User::class.java)
                 val subject = currentTeacher!!.subject
+                val semArray = currentTeacher.semester
+                var index: Int? = null
+                for (semIndex in semArray!!.indices){
+                    if (semArray[semIndex]==semText){
+                        index=semIndex
+                    }
+                }
                 val studentUid = currentUser.uid
                 val docRef = firestore.collection("student")
                     .document(studentUid!!)
                     .collection("subject")
-                    .document(subject!!.trim())
+                    .document(subject!![index!!])
                 docRef.get().addOnSuccessListener { documentSnapshot->
                     if (documentSnapshot.exists()){
                         val totalAttendance = documentSnapshot["total_attendance"].toString()

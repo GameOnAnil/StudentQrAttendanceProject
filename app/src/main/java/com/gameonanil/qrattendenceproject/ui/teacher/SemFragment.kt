@@ -2,9 +2,9 @@ package com.gameonanil.qrattendenceproject.ui.teacher
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,12 +15,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentSemBinding
+import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
-class SemFragment : Fragment(){
-    companion object{
+class SemFragment : Fragment() {
+    companion object {
         private const val TAG = "SemFragment"
     }
 
@@ -28,7 +30,9 @@ class SemFragment : Fragment(){
     private val binding get() = _binding!!
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var semText: String
+    private lateinit var firestore: FirebaseFirestore
+   private lateinit var semText: String
+    private var semType: List<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +50,8 @@ class SemFragment : Fragment(){
         NavigationUI.setupWithNavController(
             binding.toolbarSem,
             navHostFragment,
-            appBarConfiguration)
+            appBarConfiguration
+        )
 
         /** TO USE OPTIONS MENU*/
         setHasOptionsMenu(true)
@@ -56,12 +61,14 @@ class SemFragment : Fragment(){
         }
 
         mAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
+        semText = ""
 
 
         binding.apply {
             autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
             buttonSemGo.setOnClickListener {
-               goToNextPage()
+                goToNextPage()
             }
         }
 
@@ -69,18 +76,49 @@ class SemFragment : Fragment(){
         return binding.root
     }
 
-    private fun goToNextPage(){
+    private fun loadSemester() {
+        val teacherId = mAuth.currentUser!!.uid
+        val teacherDocRef = firestore.collection("users").document(teacherId)
+
+        teacherDocRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val currentUser = documentSnapshot.toObject(User::class.java)
+                    semType = currentUser!!.semester
+                    Log.d(TAG, "loadSemester: semType:$semType")
+
+                  //  val semTypes = resources.getStringArray(R.array.sem_temp)
+                    val semArrayList:ArrayList<String>  = ArrayList()
+                    for (currentSem in semType!!){
+                        semArrayList.add(currentSem)
+                    }
+                    if (semArrayList.isNotEmpty()){
+                        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
+                        binding.autoCompleteSemester.setAdapter(arrayAdapter)
+                    }
+                }
+            }.addOnFailureListener {
+                Log.d(TAG, "loadSemester: Error:${it.message}")
+                Toast.makeText(requireContext(), "Failed to load Sem:${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+   private fun goToNextPage() {
         semText = binding.autoCompleteSemester.text.toString()
-        val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment(semText)
-        findNavController().navigate(action)
+       if (semText==""||semText=="Select Semester"){
+           Toast.makeText(requireContext(), "Semester Empty", Toast.LENGTH_SHORT).show()
+       }else{
+           val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment(semText)
+           findNavController().navigate(action)
+       }
+
     }
 
     /**SETTING UP DROPDOWN MENU **/
     override fun onResume() {
         super.onResume()
-        val semTypes = resources.getStringArray(R.array.sem_temp)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,semTypes)
-        binding.autoCompleteSemester.setAdapter(arrayAdapter)
+        loadSemester()
+
     }
 
     override fun onDestroyView() {
@@ -89,12 +127,12 @@ class SemFragment : Fragment(){
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_logout,menu)
+        inflater.inflate(R.menu.menu_logout, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId ==R.id.itemLogout){
+        if (item.itemId == R.id.itemLogout) {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)

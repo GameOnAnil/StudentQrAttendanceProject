@@ -43,6 +43,9 @@
         <argument
             android:name="userDetail"
             app:argType="com.gameonanil.qrattendenceproject.model.User"/>
+        <argument
+            android:name="semText"
+            app:argType="string"/>
 
     </fragment>
     <fragment
