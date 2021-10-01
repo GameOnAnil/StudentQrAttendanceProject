@@ -144,6 +144,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
 
             attendanceList.clear()
             attendanceList.addAll(userFromDb)
+            attendanceList.sortBy { it.roll!! }
             adapter.notifyDataSetChanged()
 
         }
