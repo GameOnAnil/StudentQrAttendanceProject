@@ -73,7 +73,7 @@ class StudentActivity : AppCompatActivity() {
                 if (userDetail != null) {
                     userDetail.username?.let { binding.tvUserName.text = it }
                     userDetail.email?.let { binding.tvEmail.text = it }
-                    userDetail.roll?.let { binding.tvRoll.text = it }
+                    userDetail.roll?.let { binding.tvRoll.text = it.toString() }
                     userDetail.address?.let { binding.tvAddress.text = it }
                     userDetail.phone?.let { binding.tvPhone.text = it }
                 }
@@ -100,7 +100,6 @@ class StudentActivity : AppCompatActivity() {
                     val teacherIdPlusSem = result.contents.toString()
                     semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem,3)
                     val newTeacherId = teacherIdPlusSem.dropLast(3)
-                    Toast.makeText(this, "Teacher Id:$newTeacherId and Sem=$semesterTextFromQr", Toast.LENGTH_SHORT).show()
                     addStudentToDb(newTeacherId,semesterTextFromQr)
                 }
             } else {

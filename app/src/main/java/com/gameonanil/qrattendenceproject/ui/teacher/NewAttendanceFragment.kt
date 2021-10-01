@@ -99,7 +99,6 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
 
         semText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).semText
         dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
-        Toast.makeText(requireContext(), "$dateText and semester $semText", Toast.LENGTH_SHORT).show()
         getDataFromDb(dateText)
         currentDate = dateText
 
@@ -126,7 +125,6 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         if (dateText.isNotEmpty()) {
             binding.toolbarText.text = "Attendance at : $dateText"
         }
-
 
         val collection = firestore
             .collection("attendance")
@@ -243,7 +241,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
             row = sheet.createRow(i + 1)
 
             cell = row!!.createCell(0);
-            cell?.setCellValue(attendanceList[i].roll)
+            cell?.setCellValue(attendanceList[i].roll.toString())
             cell?.cellStyle = defaultStyle
 
             cell = row!!.createCell(1);

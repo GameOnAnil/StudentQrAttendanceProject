@@ -129,6 +129,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
             attendanceList.clear()
             attendanceList.addAll(userFromDb)
+            attendanceList.sortBy { it.roll!! }
             adapter.notifyDataSetChanged()
 
         }
@@ -230,7 +231,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             row = sheet.createRow(i + 1)
 
             cell = row!!.createCell(0);
-            cell?.setCellValue(attendanceList[i].roll)
+            cell?.setCellValue(attendanceList[i].roll.toString())
             cell?.cellStyle = defaultStyle
 
             cell = row!!.createCell(1);
