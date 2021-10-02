@@ -64,24 +64,8 @@ class LoginActivity : AppCompatActivity() {
                 signInWithEmailPass(email,password)
 
 
-
             }
 
-            btnTeacher.setOnClickListener {
-                btnLogin.isEnabled = false
-                btnTeacher.isEnabled = false
-                btnStudent.isEnabled = false
-                progressbarLogin.isVisible = true
-                signInWithEmailPass("teacher@gmail.com","password")
-            }
-
-            btnStudent.setOnClickListener {
-                btnLogin.isEnabled = false
-                btnTeacher.isEnabled = false
-                btnStudent.isEnabled = false
-                progressbarLogin.isVisible = true
-                signInWithEmailPass("user1@gmail.com","password")
-            }
         }
 
 
@@ -99,6 +83,7 @@ class LoginActivity : AppCompatActivity() {
                     when(userTypeString){
                         "student"->goToStudentActivity()
                         "teacher"->goToTeacherActivity()
+                        
                     }
 
                 }.addOnFailureListener {

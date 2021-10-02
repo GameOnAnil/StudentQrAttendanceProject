@@ -29,6 +29,16 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_login"
+        android:text="QR Attendance APP"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:layout_marginTop="30dp"/>
+
     <ProgressBar
         android:id="@+id/progressbar_login"
         android:layout_width="wrap_content"

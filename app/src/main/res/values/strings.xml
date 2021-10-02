@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QrAttendenceProject</string>
+    <string name="app_name">Qr Attendance</string>
     <string name="title_activity_teacher">TeacherActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>

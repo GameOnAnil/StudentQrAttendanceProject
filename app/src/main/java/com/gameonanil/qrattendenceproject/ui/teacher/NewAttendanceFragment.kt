@@ -288,7 +288,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 )
                 fos = resolver.openOutputStream(Objects.requireNonNull(excelUri)!!)!!
                 wb.write(fos)
-                Toast.makeText(requireContext(), "Document Saved", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Excel File Downloaded", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "handleDownloadAttendance: document saved sdk Q")
             } else {
 
@@ -300,7 +300,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 wb.write(outputStream)
 
                 Log.d(TAG, "createExcel: Old way called")
-                Toast.makeText(requireContext(), "Document Saved", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Excel File Downloaded", Toast.LENGTH_SHORT).show()
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()

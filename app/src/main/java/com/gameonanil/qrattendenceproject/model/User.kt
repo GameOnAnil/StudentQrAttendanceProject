@@ -15,7 +15,6 @@ import kotlinx.parcelize.Parcelize
     val password: String?="",
     val user_type: String?="",
     val subject:List<String>?=null,
-
     val semester:List<String>?=null
 
 ): Parcelable
