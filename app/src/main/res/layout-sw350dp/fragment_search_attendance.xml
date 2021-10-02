@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/search_background"
+    tools:context=".ui.teacher.MainTeacherFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_search_attendance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/blue3"
+        android:elevation="10dp"
+        android:gravity="start"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter Attendance Date"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar_search_attendance"
+        android:layout_marginTop="200dp">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEnterDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/round_edit_text"
+            android:drawableStart="@drawable/ic_calender"
+            android:drawablePadding="10dp"
+            android:hint="Enter Date"
+            android:paddingStart="10dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="15dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:focusableInTouchMode="false"/>
+
+        <Button
+            android:id="@+id/button_search_attendance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_button"
+            android:paddingStart="10dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="15dp"
+            android:text="Find"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

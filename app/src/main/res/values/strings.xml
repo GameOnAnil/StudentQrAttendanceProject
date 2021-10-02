@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_admin">AdminActivity</string>
+    <string name="login">Login</string>
 
     <string-array name="user_type">
         <item>Select User Type</item>

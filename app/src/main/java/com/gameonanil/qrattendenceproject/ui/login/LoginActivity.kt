@@ -55,8 +55,6 @@ class LoginActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
                 btnLogin.isEnabled = false
-                btnTeacher.isEnabled = false
-                btnStudent.isEnabled = false
                 progressbarLogin.isVisible = true
                 val email = etEmail.text.toString().trim()
                 val password = etPass.text.toString().trim()
@@ -88,15 +86,11 @@ class LoginActivity : AppCompatActivity() {
 
                 }.addOnFailureListener {
                     binding.btnLogin.isEnabled = true
-                    binding.btnTeacher.isEnabled = true
-                    binding.btnStudent.isEnabled = true
                     binding.progressbarLogin.isVisible = false
                     Toast.makeText(this@LoginActivity, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
             }else{
                 binding.btnLogin.isEnabled = true
-                binding.btnTeacher.isEnabled = true
-                binding.btnStudent.isEnabled = true
                 binding.progressbarLogin.isVisible = false
                 Toast.makeText(this@LoginActivity, "Failed to login: ${task.exception}", Toast.LENGTH_SHORT).show()
             }
@@ -105,8 +99,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToTeacherActivity() {
         binding.btnLogin.isEnabled = true
-        binding.btnTeacher.isEnabled = true
-        binding.btnStudent.isEnabled = true
         binding.progressbarLogin.isVisible = false
         val intent = Intent(this, TeacherActivity::class.java)
         startActivity(intent)
@@ -115,8 +107,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToStudentActivity() {
         binding.btnLogin.isEnabled = true
-        binding.btnTeacher.isEnabled = true
-        binding.btnStudent.isEnabled = true
         binding.progressbarLogin.isVisible = false
         val intent = Intent(this, StudentActivity::class.java)
         startActivity(intent)
