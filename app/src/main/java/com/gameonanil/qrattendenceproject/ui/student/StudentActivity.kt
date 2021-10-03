@@ -100,11 +100,43 @@ class StudentActivity : AppCompatActivity() {
                     val teacherIdPlusSem = result.contents.toString()
                     semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem,3)
                     val newTeacherId = teacherIdPlusSem.dropLast(3)
-                    addStudentToDb(newTeacherId,semesterTextFromQr)
+                    checkAccess(newTeacherId,semesterTextFromQr)
+                   // addStudentToDb(newTeacherId,semesterTextFromQr)
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data)
             }
+        }
+    }
+
+    fun checkAccess(teacherId: String, semText: String){
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
+        val accessDocReference = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("semester")
+            .document(semText)
+            .collection("date")
+            .document(formattedDate)
+            .collection("access")
+            .document(teacherId)
+
+        accessDocReference.get().addOnSuccessListener { documentSnapnot->
+                if (documentSnapnot.exists()){
+                    val accessCheck = documentSnapnot["access_allowed"]
+                    Log.d(TAG, "checkAccess: checkAcces=${accessCheck}")
+                    if (accessCheck==true){
+                        addStudentToDb(teacherId,semText)
+                    }else{
+                        Toast.makeText(this, "Access Denied Please Contact Your Teacher.", Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    Log.d(TAG, "checkAccess: Document Doesnt exixt!!!")
+                }
+
         }
     }
 

@@ -16,9 +16,13 @@ import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class GeneratorFragment : Fragment() {
@@ -30,8 +34,10 @@ class GeneratorFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var semesterText: String
+    private lateinit var teacherId: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,14 +60,76 @@ class GeneratorFragment : Fragment() {
             NavHostFragment.findNavController(this).navigateUp()
         }
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         semesterText = GeneratorFragmentArgs.fromBundle(requireArguments()).semText
+        teacherId = auth.currentUser!!.uid
 
 
 
         generateOnStart()
 
         return binding.root
+    }
+
+    private fun initAccessTrue(teacherId:String,semText:String){
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
+        val accessDocReference = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("semester")
+            .document(semText)
+            .collection("date")
+            .document(formattedDate)
+            .collection("access")
+            .document(teacherId)
+
+        val accessHashMap = HashMap<String,Boolean>()
+        accessHashMap["access_allowed"] = true
+        accessDocReference.set(accessHashMap).addOnSuccessListener {
+            Log.d(TAG, "setAccessFalse: ACCESS TRUE SUCESSFUL ")
+        }.addOnFailureListener {
+            Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
+        }
+    }
+
+    private fun setAccessFalse(teacherId:String,semText:String){
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+
+        val accessDocReference = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("semester")
+            .document(semText)
+            .collection("date")
+            .document(formattedDate)
+            .collection("access")
+            .document(teacherId)
+
+        val accessHashMap = HashMap<String,Boolean>()
+        accessHashMap["access_allowed"] = false
+        accessDocReference.set(accessHashMap).addOnSuccessListener {
+            Log.d(TAG, "setAccessFalse: ACCESS FALSE SUCESSFUL ")
+        }.addOnFailureListener {
+            Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (teacherId.isNotEmpty()){
+            initAccessTrue(teacherId,semesterText)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        setAccessFalse(teacherId,semesterText)
     }
 
     private fun generateOnStart(){
