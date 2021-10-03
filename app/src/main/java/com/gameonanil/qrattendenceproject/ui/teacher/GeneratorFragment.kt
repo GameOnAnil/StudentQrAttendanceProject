@@ -129,7 +129,9 @@ class GeneratorFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        setAccessFalse(teacherId,semesterText)
+        if (teacherId.isNotEmpty()){
+            setAccessFalse(teacherId,semesterText)
+        }
     }
 
     private fun generateOnStart(){
