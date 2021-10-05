@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/search_background"
-    tools:context=".ui.teacher.SemFragment"
-    android:theme="@style/CustomThemeForSem">
+    tools:context=".ui.admin.AddTeacherFragment">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_sem"
+        android:id="@+id/toolbar_add_teacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -16,73 +14,76 @@
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
-       >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter Semester"
+            android:text="Add Teacher"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:focusable="false"/>
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_sem"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="180dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        <EditText
+            android:id="@+id/etUserName"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="17dp"
-            >
+            android:layout_height="wrap_content"
+            android:hint="Enter Name" />
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteSemester"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Select Semester"
-                android:textSize="18sp"
-                android:inputType="none"
-                android:padding="8dp"
-                android:drawableStart="@drawable/ic_book"
-                android:drawablePadding="10dp"/>
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Email" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Password" />
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Address" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Contact No." />
+
 
         <Button
-            android:id="@+id/button_sem_go"
+            android:id="@+id/button_add_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="100dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/round_button"
             android:paddingStart="10dp"
             android:paddingTop="15dp"
             android:paddingEnd="10dp"
             android:paddingBottom="15dp"
-            android:text="Go"
+            android:text="Add"
             android:textColor="@color/white"
             android:textSize="18sp"
 
             />
     </LinearLayout>
+
 
 </RelativeLayout>

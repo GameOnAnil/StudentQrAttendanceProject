@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.gameonanil.qrattendenceproject.databinding.ActivityLoginBinding
+import com.gameonanil.qrattendenceproject.ui.admin.AdminActivity
 import com.gameonanil.qrattendenceproject.ui.student.StudentActivity
 import com.gameonanil.qrattendenceproject.ui.teacher.TeacherActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseFirestore = FirebaseFirestore.getInstance()
 
 
-
+        mAuth.signOut()
         if (mAuth.currentUser !=null){
             binding.progressbarLogin.isVisible = true
             val currentUser = mAuth.currentUser
@@ -40,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
                 val userTypeString = docSnapshot.data!!["user_type"]
                 Log.d(TAG, "onCreate: userTYpe = $userTypeString ")
                 when(userTypeString){
+                    "admin"->goToAdminActivity()
                     "student"->goToStudentActivity()
                     "teacher"->goToTeacherActivity()
                 }
@@ -79,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
                     val userTypeString = docSnapshot.data!!["user_type"]
                     Log.d(TAG, "onCreate: userTYpe = $userTypeString ")
                     when(userTypeString){
+                        "admin"->goToAdminActivity()
                         "student"->goToStudentActivity()
                         "teacher"->goToTeacherActivity()
                         
@@ -95,6 +98,14 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "Failed to login: ${task.exception}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun goToAdminActivity() {
+        binding.btnLogin.isEnabled = true
+        binding.progressbarLogin.isVisible = false
+        val intent = Intent(this, AdminActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun goToTeacherActivity() {

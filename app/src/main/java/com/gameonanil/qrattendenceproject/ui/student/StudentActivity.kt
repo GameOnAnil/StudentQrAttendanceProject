@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.ActivityStudentBinding
+import com.gameonanil.qrattendenceproject.model.Student
 import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -69,7 +70,7 @@ class StudentActivity : AppCompatActivity() {
         val userDocRef = firestore.collection("users").document(currentUid)
         userDocRef.get().addOnSuccessListener { docSnapshot->
             if (docSnapshot.exists()){
-                val userDetail = docSnapshot.toObject(User::class.java)
+                val userDetail = docSnapshot.toObject(Student::class.java)
                 if (userDetail != null) {
                     userDetail.username?.let { binding.tvUserName.text = it }
                     userDetail.email?.let { binding.tvEmail.text = it }
