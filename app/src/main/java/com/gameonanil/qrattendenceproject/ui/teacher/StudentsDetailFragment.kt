@@ -92,12 +92,16 @@ class StudentsDetailFragment : Fragment() {
                     .document(studentUid!!)
                     .collection("subject")
                     .document(subject!![index!!])
+                Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subject[index]}")
                 docRef.get().addOnSuccessListener { documentSnapshot->
                     if (documentSnapshot.exists()){
                         val totalAttendance = documentSnapshot["total_attendance"].toString()
+                        Log.d(TAG, "onCreateView: TOTALATTENDANCE from db is:$totalAttendance")
                         if (totalAttendance.isNotEmpty()){
                             tvTotalAttendance.text = totalAttendance.toString()
                         }
+                    }else{
+                        Log.d(TAG, "onCreateView: Document not found for total attendance")
                     }
                     binding.progressbarStudentDetail.isVisible = false
                 }.addOnFailureListener {
@@ -108,10 +112,7 @@ class StudentsDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
                 binding.progressbarStudentDetail.isVisible = false
             }
-            
-
         }
-
 
         return binding.root
     }
