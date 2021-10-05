@@ -42,7 +42,7 @@
         tools:layout="@layout/fragment_students_detail" >
         <argument
             android:name="userDetail"
-            app:argType="com.gameonanil.qrattendenceproject.model.User"/>
+            app:argType="com.gameonanil.qrattendenceproject.model.Student"/>
         <argument
             android:name="semText"
             app:argType="string"/>

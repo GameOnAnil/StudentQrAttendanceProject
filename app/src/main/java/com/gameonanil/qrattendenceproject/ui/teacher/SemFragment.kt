@@ -15,7 +15,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentSemBinding
-import com.gameonanil.qrattendenceproject.model.User
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,7 +74,7 @@ class SemFragment : Fragment() {
 
         return binding.root
     }
-
+/*
     private fun loadSemester() {
         val teacherId = mAuth.currentUser!!.uid
         val teacherDocRef = firestore.collection("users").document(teacherId)
@@ -101,10 +100,11 @@ class SemFragment : Fragment() {
                 Log.d(TAG, "loadSemester: Error:${it.message}")
                 Toast.makeText(requireContext(), "Failed to load Sem:${it.message}", Toast.LENGTH_SHORT).show()
             }
-    }
+    }*/
 
    private fun goToNextPage() {
-        semText = binding.autoCompleteSemester.text.toString()
+       // semText = binding.autoCompleteSemester.text.toString()
+       semText = "4th"
        if (semText==""||semText=="Select Semester"){
            Toast.makeText(requireContext(), "Semester Empty", Toast.LENGTH_SHORT).show()
        }else{
@@ -117,7 +117,7 @@ class SemFragment : Fragment() {
     /**SETTING UP DROPDOWN MENU **/
     override fun onResume() {
         super.onResume()
-        loadSemester()
+       // loadSemester()
 
     }
 

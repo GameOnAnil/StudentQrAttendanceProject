@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseFirestore = FirebaseFirestore.getInstance()
 
 
-        mAuth.signOut()
+
         if (mAuth.currentUser !=null){
             binding.progressbarLogin.isVisible = true
             val currentUser = mAuth.currentUser

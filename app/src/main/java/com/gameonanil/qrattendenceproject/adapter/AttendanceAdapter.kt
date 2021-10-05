@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gameonanil.qrattendenceproject.databinding.AttendanceListBinding
-import com.gameonanil.qrattendenceproject.model.User
+import com.gameonanil.qrattendenceproject.model.Student
 
 
 class AttendanceAdapter(
     private val context: Context,
-    private val userList: List<User>,
+    private val userList: MutableList<Student>,
     private val listener: OnAttendanceClickListener
 ) :
     RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder>() {
@@ -33,7 +33,7 @@ class AttendanceAdapter(
             itemView.setOnClickListener(this)
         }
 
-        fun bindTo(user: User) {
+        fun bindTo(user: Student) {
             binding.apply {
                 tvUserName.text = user.username.toString()
             }
@@ -56,7 +56,7 @@ class AttendanceAdapter(
     }
 
     interface OnAttendanceClickListener {
-        fun handleItemClicked(position: Int,user:User)
+        fun handleItemClicked(position: Int, user: Student)
         fun handleDeleteClicked(position: Int)
 
     }

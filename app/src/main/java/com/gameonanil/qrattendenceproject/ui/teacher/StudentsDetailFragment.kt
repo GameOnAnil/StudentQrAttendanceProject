@@ -15,12 +15,10 @@ import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 
 import com.gameonanil.qrattendenceproject.databinding.FragmentStudentsDetailBinding
-import com.gameonanil.qrattendenceproject.model.User
+import com.gameonanil.qrattendenceproject.model.Student
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -33,7 +31,7 @@ class StudentsDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var currentUser : User
+    private lateinit var currentUser : Student
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var semText:String
@@ -76,46 +74,50 @@ class StudentsDetailFragment : Fragment() {
             currentUser.address?.let{tvAddress.text = it}
 
 
-            val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
-            teacherReference.get().addOnSuccessListener {
-                val currentTeacher = it.toObject(User::class.java)
-                val subject = currentTeacher!!.subject
-                val semArray = currentTeacher.semester
-                var index: Int? = null
-                for (semIndex in semArray!!.indices){
-                    if (semArray[semIndex]==semText){
-                        index=semIndex
-                    }
-                }
-                val studentUid = currentUser.uid
-                val docRef = firestore.collection("student")
-                    .document(studentUid!!)
-                    .collection("subject")
-                    .document(subject!![index!!])
-                Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subject[index]}")
-                docRef.get().addOnSuccessListener { documentSnapshot->
-                    if (documentSnapshot.exists()){
-                        val totalAttendance = documentSnapshot["total_attendance"].toString()
-                        Log.d(TAG, "onCreateView: TOTALATTENDANCE from db is:$totalAttendance")
-                        if (totalAttendance.isNotEmpty()){
-                            tvTotalAttendance.text = totalAttendance.toString()
-                        }
-                    }else{
-                        Log.d(TAG, "onCreateView: Document not found for total attendance")
-                    }
-                    binding.progressbarStudentDetail.isVisible = false
-                }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
-                    binding.progressbarStudentDetail.isVisible = false
-                }
-            }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
-                binding.progressbarStudentDetail.isVisible = false
-            }
+            //displayTotalAttendance()
         }
 
         return binding.root
     }
+/*
+    private fun displayTotalAttendance(){
+        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
+        teacherReference.get().addOnSuccessListener {
+            val currentTeacher = it.toObject(User::class.java)
+            val subject = currentTeacher!!.subject
+            val semArray = currentTeacher.semester
+            var index: Int? = null
+            for (semIndex in semArray!!.indices){
+                if (semArray[semIndex]==semText){
+                    index=semIndex
+                }
+            }
+            val studentUid = currentUser.uid
+            val docRef = firestore.collection("student")
+                .document(studentUid!!)
+                .collection("subject")
+                .document(subject!![index!!])
+            Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subject[index]}")
+            docRef.get().addOnSuccessListener { documentSnapshot->
+                if (documentSnapshot.exists()){
+                    val totalAttendance = documentSnapshot["total_attendance"].toString()
+                    Log.d(TAG, "onCreateView: TOTALATTENDANCE from db is:$totalAttendance")
+                    if (totalAttendance.isNotEmpty()){
+                        binding.tvTotalAttendance.text = totalAttendance.toString()
+                    }
+                }else{
+                    Log.d(TAG, "onCreateView: Document not found for total attendance")
+                }
+                binding.progressbarStudentDetail.isVisible = false
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+                binding.progressbarStudentDetail.isVisible = false
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
+            binding.progressbarStudentDetail.isVisible = false
+        }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)

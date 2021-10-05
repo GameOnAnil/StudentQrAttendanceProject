@@ -21,7 +21,7 @@ import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.AttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
-import com.gameonanil.qrattendenceproject.model.User
+import com.gameonanil.qrattendenceproject.model.Student
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -53,7 +53,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var adapter: AttendanceAdapter
-    private lateinit var attendanceList: MutableList<User>
+    private lateinit var attendanceList: MutableList<Student>
     private lateinit var teacherId: String
     private lateinit var semText: String
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -100,39 +100,9 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         adapter = AttendanceAdapter(requireActivity(), attendanceList, this)
 
         binding.recyclerTeacher.adapter = adapter
-
         teacherId = auth.currentUser!!.uid
 
-        val date = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy.MM.dd")
-        val formattedDate = formatter.format(date)
-        currentDate = formattedDate
-
-
-        val collection = firestore
-            .collection("attendance")
-            .document(teacherId)
-            .collection("semester")
-            .document(semText)
-            .collection("date")
-            .document(formattedDate)
-            .collection("student_list")
-
-        collection.addSnapshotListener { snapshot, exception ->
-            if (exception != null || snapshot == null) {
-                Log.e(TAG, "onCreate: Exception: $exception")
-                return@addSnapshotListener
-            }
-
-
-            val userFromDb = snapshot.toObjects(User::class.java)
-
-            attendanceList.clear()
-            attendanceList.addAll(userFromDb)
-            attendanceList.sortBy { it.roll!! }
-            adapter.notifyDataSetChanged()
-
-        }
+        initListFromDb()
 
 
         binding.apply {
@@ -161,6 +131,37 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         return binding.root
     }
+    private fun initListFromDb(){
+        val date = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy.MM.dd")
+        val formattedDate = formatter.format(date)
+        currentDate = formattedDate
+
+        val collection = firestore
+            .collection("attendance")
+            .document(teacherId)
+            .collection("semester")
+            .document(semText)
+            .collection("date")
+            .document(formattedDate)
+            .collection("student_list")
+
+        collection.addSnapshotListener { snapshot, exception ->
+            if (exception != null || snapshot == null) {
+                Log.e(TAG, "onCreate: Exception: $exception")
+                return@addSnapshotListener
+            }
+
+
+            val userFromDb = snapshot.toObjects(Student::class.java)
+            attendanceList.clear()
+            attendanceList.addAll(userFromDb)
+            attendanceList.sortBy { it.roll!! }
+            adapter.notifyDataSetChanged()
+
+        }
+    }
+
 
     //handling options menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -298,7 +299,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
+/*
     private fun decreaseTotalAttendance(studentId: String) {
         Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
         val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
@@ -321,7 +322,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->
-                    /** When student subject attendance count exists**/
+                    *//** When student subject attendance count exists**//*
                     if (docSnapshot.result!!.exists()) {
                         Log.d(TAG, "decreaseTotalAttendance:  EXIST")
                         val totalAttendance =
@@ -342,14 +343,14 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
         }
 
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    override fun handleItemClicked(position: Int, user: User) {
+    override fun handleItemClicked(position: Int, user: Student) {
         val action =
             MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user,semText)
         findNavController().navigate(action)
@@ -386,7 +387,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        decreaseTotalAttendance(currentUid)
+                        //decreaseTotalAttendance(currentUid)
 
                     }
                     .addOnFailureListener { e ->

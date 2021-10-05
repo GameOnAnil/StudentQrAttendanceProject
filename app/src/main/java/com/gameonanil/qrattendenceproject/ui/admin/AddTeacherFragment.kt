@@ -82,7 +82,7 @@ class AddTeacherFragment : Fragment() {
                         .show()
                     return@setOnClickListener
                 }
-                nameString = etUserName.text.toString()
+                nameString = etUserName.text.trim().toString()
                 if (etPhone.text.isNotEmpty()) {
                     phoneString = etPhone.text.toString()
                 }
@@ -91,8 +91,8 @@ class AddTeacherFragment : Fragment() {
                 }
 
 
-                val email: String = etEmail.text.toString()
-                val password: String = etPass.text.toString()
+                val email: String = etEmail.text.trim().toString()
+                val password: String = etPass.text.trim().toString()
                 if (email.isNotEmpty() || password.isNotEmpty()) {
                     signUpUser(email, password)
                 }

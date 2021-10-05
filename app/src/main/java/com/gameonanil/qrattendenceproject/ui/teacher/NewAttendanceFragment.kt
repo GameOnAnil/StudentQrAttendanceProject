@@ -13,13 +13,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.NewAttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentNewAttendanceBinding
-import com.gameonanil.qrattendenceproject.model.User
+import com.gameonanil.qrattendenceproject.model.Student
+import com.gameonanil.qrattendenceproject.model.Teacher
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -52,7 +54,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     private lateinit var adapter: NewAttendanceAdapter
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
-    private lateinit var attendanceList: MutableList<User>
+    private lateinit var attendanceList: MutableList<Student>
     private lateinit var teacherId: String
     private lateinit var dateText: String
     private lateinit var semText: String
@@ -140,7 +142,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 Log.e(TAG, "onCreate: Exception: $exception")
                 return@addSnapshotListener
             }
-            val userFromDb = snapshot.toObjects(User::class.java)
+            val userFromDb = snapshot.toObjects(Student::class.java)
 
             attendanceList.clear()
             attendanceList.addAll(userFromDb)
@@ -151,11 +153,12 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     }
 
 
-    override fun handleItemClicked(position: Int, user: User) {
+    override fun handleItemClicked(position: Int, user: Student) {
         val currentUser = attendanceList[position]
         val action =
             NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser,semText)
         findNavController().navigate(action)
+
     }
 
     override fun handleDeleteClicked(position: Int) {
@@ -189,7 +192,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        decreaseTotalAttendance(currentUid)
+                       // decreaseTotalAttendance(currentUid)
                     }.addOnFailureListener {
                         Log.d(TAG, "handleDeleteClicked: ERROR: ${it.message.toString()}")
                     }
@@ -309,11 +312,11 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         }
     }
 
-    private fun decreaseTotalAttendance(studentId: String) {
+  /*  private fun decreaseTotalAttendance(studentId: String) {
         Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
         val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
         teacherReference.get().addOnSuccessListener {
-            val currentTeacher = it.toObject(User::class.java)
+            val currentTeacher = it.toObject(Teacher::class.java)
             val subject = currentTeacher!!.subject
             val semArray = currentTeacher.semester
             var index: Int? = null
@@ -331,7 +334,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
                 studentDocRef.get().addOnCompleteListener { docSnapshot ->
-                    /** When student subject attendance count exists**/
+                    *//** When student subject attendance count exists**//*
                     if (docSnapshot.result!!.exists()) {
                         Log.d(TAG, "decreaseTotalAttendance:  EXIST")
                         val totalAttendance =
@@ -352,7 +355,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
             Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
         }
 
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)
