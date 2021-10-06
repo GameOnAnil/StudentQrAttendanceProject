@@ -202,7 +202,7 @@ class StudentActivity : AppCompatActivity() {
 
     private fun increaseTotalAttendance(teacherId: String, subjectText: String) {
 
-        val studentDocRef = firestore.collection("student")
+        val studentDocRef = firestore.collection("attendance_count")
             .document(currentUid)
             .collection("subject")
             .document(subjectText)

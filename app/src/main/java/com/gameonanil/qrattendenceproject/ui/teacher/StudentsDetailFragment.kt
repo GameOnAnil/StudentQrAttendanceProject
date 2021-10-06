@@ -83,7 +83,7 @@ class StudentsDetailFragment : Fragment() {
     private fun displayTotalAttendance(){
 
             val studentUid = currentUser.uid
-            val docRef = firestore.collection("student")
+            val docRef = firestore.collection("attendance_count")
                 .document(studentUid!!)
                 .collection("subject")
                 .document(subjectText)
