@@ -1,12 +1,15 @@
 package com.gameonanil.qrattendenceproject.ui.admin
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +19,7 @@ import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentAddTeacherBinding
 import com.gameonanil.qrattendenceproject.model.Teacher
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
+import com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -116,7 +120,7 @@ class AddTeacherFragment : Fragment() {
             }
 
             buttonAddSub.setOnClickListener {
-                spinnerArray.add("Java1")
+                handleAddSubjectClicked()
                 spinnerAdapter.notifyDataSetChanged()
             }
 
@@ -132,6 +136,31 @@ class AddTeacherFragment : Fragment() {
 
 
         return binding.root
+    }
+
+    private fun handleAddSubjectClicked(){
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.dialog_edit_text,null)
+        val editText = dialogLayout.findViewById<EditText>(R.id.etSubjectDialog)
+
+        with(builder){
+            setTitle("Enter Subject Name")
+            setPositiveButton("Confirm"){dialog,which->
+                if (editText.text.toString().isNotEmpty()){
+                    spinnerArray.add(editText.text.toString())
+                }else{
+                    Toast.makeText(requireContext(), "Subject Empty!", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+            setNegativeButton("Cancel"){dialog,which->
+                Log.d(TAG, "handleAddSubjectClicked: cancel clicked")
+            }
+            setView(dialogLayout)
+            show()
+        }
+
     }
 
     private fun signUpUser(email: String, password: String) {
