@@ -42,29 +42,61 @@
         android:orientation="vertical"
         >
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:hint="Select Subject"
-            android:layout_height="70dp"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="17dp"
-            >
+            android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteSemester"
+            <ImageButton
+                android:id="@+id/button_delete_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_delete_24"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="35dp"
+                android:background="@color/white"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Select Subject"
-                android:textSize="18sp"
-                android:inputType="none"
-                android:padding="8dp"
-                android:drawableStart="@drawable/ic_book"
-                android:drawablePadding="10dp"/>
+                android:layout_height="70dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="17dp"
+                >
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <AutoCompleteTextView
+                    android:id="@+id/autoCompleteSemester"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Select Subject"
+                    android:textSize="18sp"
+                    android:inputType="none"
+                    android:padding="8dp"
+                    android:drawableStart="@drawable/ic_book"
+                    android:drawablePadding="10dp"/>
 
+            </com.google.android.material.textfield.TextInputLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button_remove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_button"
+            android:paddingStart="10dp"
+            android:paddingTop="15dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="15dp"
+            android:text="Remove"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+
+            />
         <Button
             android:id="@+id/button_sem_go"
             android:layout_width="match_parent"

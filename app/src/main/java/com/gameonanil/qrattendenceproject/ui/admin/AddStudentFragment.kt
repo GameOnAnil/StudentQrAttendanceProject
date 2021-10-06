@@ -95,18 +95,18 @@ class AddStudentFragment : Fragment() {
                         .show()
                     return@setOnClickListener
                 }
-                nameString = etUserName.text.trim().toString()
+                nameString = etUserName.text!!.trim().toString()
                 rollNumber = etRoll.text.toString().trim().toInt()
-                if (etPhone.text.isNotEmpty()) {
+                if (etPhone.text!!.isNotEmpty()) {
                     phoneString = etPhone.text.toString()
                 }
-                if (etAddress.text.isNotEmpty()) {
+                if (etAddress.text!!.isNotEmpty()) {
                     addressString = etAddress.text.toString()
                 }
 
 
-                val email: String = etEmail.text.trim().toString()
-                val password: String = etPass.text.trim().toString()
+                val email: String = etEmail.text!!.trim().toString()
+                val password: String = etPass.text!!.trim().toString()
                 if (email.isNotEmpty() || password.isNotEmpty()) {
                     signUpUser(email, password)
                 }

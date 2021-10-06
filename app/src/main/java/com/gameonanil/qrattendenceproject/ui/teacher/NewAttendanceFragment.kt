@@ -116,6 +116,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 }
             }
 
+
         }
 
         return binding.root

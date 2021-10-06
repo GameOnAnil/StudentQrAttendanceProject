@@ -33,6 +33,8 @@ class SubjectFragment : Fragment() {
     private lateinit var firestore: FirebaseFirestore
    private lateinit var subjectText: String
     private var subjectType: List<String>? = null
+    private lateinit var semArrayList:ArrayList<String>
+    private lateinit var arrayAdapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,18 +66,34 @@ class SubjectFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
         subjectText = ""
 
-
-        loadSemester()
-
         binding.apply {
             autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
             buttonSemGo.setOnClickListener {
                 goToNextPage()
             }
+
+            buttonRemove.setOnClickListener {
+                deleteCurrentSubject()
+                arrayAdapter.notifyDataSetChanged()
+
+            }
         }
 
 
         return binding.root
+    }
+
+    private fun deleteCurrentSubject(){
+        val currentSubject = binding.autoCompleteSemester.text.toString()
+        Log.d(TAG, "deleteCurrentSubject: current sub:$currentSubject")
+        if (currentSubject!=""&&currentSubject!="Select Subject"){
+           val index = semArrayList.indexOf(currentSubject)
+            Log.d(TAG, "deleteCurrentSubject: index:$index")
+            semArrayList.removeAt(index)
+            Log.d(TAG, "deleteCurrentSubject: REMOVED")
+        }else{
+            Log.d(TAG, "deleteCurrentSubject: NOT REMOVED $currentSubject")
+        }
     }
 
     private fun loadSemester() {
@@ -90,12 +108,12 @@ class SubjectFragment : Fragment() {
                     Log.d(TAG, "loadSemester: semType:$subjectType")
 
                   //  val semTypes = resources.getStringArray(R.array.sem_temp)
-                    val semArrayList:ArrayList<String>  = ArrayList()
+                    semArrayList = ArrayList()
                     for (currentSub in subjectType!!){
                         semArrayList.add(currentSub)
                     }
                     if (semArrayList.isNotEmpty()){
-                        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
+                        arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
                         binding.autoCompleteSemester.setAdapter(arrayAdapter)
                     }
                 }
@@ -107,7 +125,6 @@ class SubjectFragment : Fragment() {
 
    private fun goToNextPage() {
         subjectText = binding.autoCompleteSemester.text.toString()
-
        if (subjectText==""||subjectText=="Select Subject"){
            Toast.makeText(requireContext(), "Subject Empty", Toast.LENGTH_SHORT).show()
        }else{
@@ -120,7 +137,7 @@ class SubjectFragment : Fragment() {
     /**SETTING UP DROPDOWN MENU **/
     override fun onResume() {
         super.onResume()
-       // loadSemester()
+        loadSemester()
 
     }
 

@@ -99,17 +99,17 @@ class AddTeacherFragment : Fragment() {
                         .show()
                     return@setOnClickListener
                 }
-                nameString = etUserName.text.trim().toString()
-                if (etPhone.text.isNotEmpty()) {
+                nameString = etUserName.text!!.trim().toString()
+                if (etPhone.text!!.isNotEmpty()) {
                     phoneString = etPhone.text.toString()
                 }
-                if (etAddress.text.isNotEmpty()) {
+                if (etAddress.text!!.isNotEmpty()) {
                     addressString = etAddress.text.toString()
                 }
 
 
-                val email: String = etEmail.text.trim().toString()
-                val password: String = etPass.text.trim().toString()
+                val email: String = etEmail.text!!.trim().toString()
+                val password: String = etPass.text!!.trim().toString()
                 if (email.isNotEmpty() || password.isNotEmpty()) {
                     signUpUser(email, password)
                 }
@@ -118,6 +118,14 @@ class AddTeacherFragment : Fragment() {
             buttonAddSub.setOnClickListener {
                 spinnerArray.add("Java1")
                 spinnerAdapter.notifyDataSetChanged()
+            }
+
+            buttonRemove.setOnClickListener {
+                val currentText = binding.spinner.selectedItem.toString()
+                if (currentText!=""){
+                    spinnerArray.remove(currentText)
+                    spinnerAdapter.notifyDataSetChanged()
+                }
             }
 
         }
