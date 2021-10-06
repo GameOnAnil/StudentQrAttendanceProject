@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +18,7 @@ import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentSemBinding
 import com.gameonanil.qrattendenceproject.model.Teacher
+import com.gameonanil.qrattendenceproject.ui.admin.AddTeacherFragment
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,7 +37,7 @@ class SubjectFragment : Fragment() {
    private lateinit var subjectText: String
     private var subjectType: List<String>? = null
     private lateinit var semArrayList:ArrayList<String>
-    private lateinit var arrayAdapter: ArrayAdapter<String>
+    private lateinit var spinnerAdapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,15 +70,22 @@ class SubjectFragment : Fragment() {
         subjectText = ""
 
         binding.apply {
-            autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
+
             buttonSemGo.setOnClickListener {
                 goToNextPage()
             }
+            buttonAddSub.setOnClickListener {
+                handleAddSubjectClicked()
+
+            }
 
             buttonRemove.setOnClickListener {
-                deleteCurrentSubject()
-                arrayAdapter.notifyDataSetChanged()
-
+                val currentText = binding.spinner.selectedItem.toString()
+                if (currentText!=""){
+                    semArrayList.remove(currentText)
+                    updateSubjectInDB(false)
+                    spinnerAdapter.notifyDataSetChanged()
+                }
             }
         }
 
@@ -83,16 +93,49 @@ class SubjectFragment : Fragment() {
         return binding.root
     }
 
-    private fun deleteCurrentSubject(){
-        val currentSubject = binding.autoCompleteSemester.text.toString()
-        Log.d(TAG, "deleteCurrentSubject: current sub:$currentSubject")
-        if (currentSubject!=""&&currentSubject!="Select Subject"){
-           val index = semArrayList.indexOf(currentSubject)
-            Log.d(TAG, "deleteCurrentSubject: index:$index")
-            semArrayList.removeAt(index)
-            Log.d(TAG, "deleteCurrentSubject: REMOVED")
-        }else{
-            Log.d(TAG, "deleteCurrentSubject: NOT REMOVED $currentSubject")
+    private fun handleAddSubjectClicked(){
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.dialog_edit_text,null)
+        val editText = dialogLayout.findViewById<EditText>(R.id.etSubjectDialog)
+
+        with(builder){
+            setTitle("Enter Subject Name")
+            setPositiveButton("Confirm"){dialog,which->
+                if (editText.text.toString().isNotEmpty()){
+                    semArrayList.add(editText.text.toString())
+                    updateSubjectInDB(true)
+                    spinnerAdapter.notifyDataSetChanged()
+                }else{
+                    Toast.makeText(requireContext(), "Subject Empty!", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+            setNegativeButton("Cancel"){dialog,which->
+                Log.d(TAG, "handleAddSubjectClicked: cancel clicked")
+            }
+            setView(dialogLayout)
+            show()
+        }
+
+    }
+
+    private fun updateSubjectInDB(isInsert:Boolean){
+        val teacherId = mAuth.currentUser!!.uid
+        val teacherDocRef = firestore.collection("users").document(teacherId)
+
+        teacherDocRef.update("subject",semArrayList).addOnSuccessListener {
+            if (isInsert==true){
+                Toast.makeText(requireContext(), "Added Successfully", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(
+                requireContext(),
+                "Error Updating Subject:${it.message}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -113,8 +156,8 @@ class SubjectFragment : Fragment() {
                         semArrayList.add(currentSub)
                     }
                     if (semArrayList.isNotEmpty()){
-                        arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
-                        binding.autoCompleteSemester.setAdapter(arrayAdapter)
+                        spinnerAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
+                        binding.spinner.setAdapter(spinnerAdapter)
                     }
                 }
             }.addOnFailureListener {
@@ -124,7 +167,7 @@ class SubjectFragment : Fragment() {
     }
 
    private fun goToNextPage() {
-        subjectText = binding.autoCompleteSemester.text.toString()
+        subjectText = binding.spinner.selectedItem.toString()
        if (subjectText==""||subjectText=="Select Subject"){
            Toast.makeText(requireContext(), "Subject Empty", Toast.LENGTH_SHORT).show()
        }else{

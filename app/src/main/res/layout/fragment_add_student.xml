@@ -169,7 +169,7 @@
             android:paddingTop="15dp"
             android:paddingEnd="10dp"
             android:paddingBottom="15dp"
-            android:text="Add"
+            android:text="Create"
             android:textColor="@color/white"
             android:textSize="18sp"
 
