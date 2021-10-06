@@ -41,7 +41,7 @@
         android:layout_margin="8dp"
         >
 
-        <TextView
+   <!--     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Choose Subject"
@@ -53,18 +53,19 @@
             android:textAlignment="center"
             android:fontFamily="@font/aladin"
             android:layout_marginTop="150dp"
-            />
+            />-->
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="150dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:background="@drawable/style_spinner"
             android:padding="10dp"
             android:textAlignment="center"
-            tools:entries="@array/sem_temp"/>
+            tools:entries="@array/sem_temp"
+            />
 
 
         <LinearLayout

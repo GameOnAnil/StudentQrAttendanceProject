@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
         firebaseFirestore = FirebaseFirestore.getInstance()
 
 
-
         if (mAuth.currentUser !=null){
             binding.progressbarLogin.isVisible = true
             val currentUser = mAuth.currentUser
@@ -60,15 +59,21 @@ class LoginActivity : AppCompatActivity() {
                 progressbarLogin.isVisible = true
                 val email = etEmail.text.toString().trim()
                 val password = etPass.text.toString().trim()
-
                 signInWithEmailPass(email,password)
+            }
 
-
+            tvForgetPassword.setOnClickListener {
+              goToForgotPassword()
             }
 
         }
 
 
+    }
+
+    private fun goToForgotPassword(){
+        val intent = Intent(this, ForgetPasswordActivity::class.java)
+        startActivity(intent)
     }
 
     private fun signInWithEmailPass(email: String, password: String) {
@@ -90,12 +95,12 @@ class LoginActivity : AppCompatActivity() {
                 }.addOnFailureListener {
                     binding.btnLogin.isEnabled = true
                     binding.progressbarLogin.isVisible = false
-                    Toast.makeText(this@LoginActivity, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Error: ${it.message}", Toast.LENGTH_LONG).show()
                 }
             }else{
                 binding.btnLogin.isEnabled = true
                 binding.progressbarLogin.isVisible = false
-                Toast.makeText(this@LoginActivity, "Failed to login: ${task.exception}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoginActivity, "Failed to login: ${task.exception}", Toast.LENGTH_LONG).show()
             }
         }
     }

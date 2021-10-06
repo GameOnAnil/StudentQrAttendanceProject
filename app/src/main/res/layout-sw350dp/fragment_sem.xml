@@ -36,17 +36,28 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_sem"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:gravity="center"
         android:orientation="vertical"
         android:layout_margin="8dp"
         >
-
+<!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Subject"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:theme="@style/TextAppearance.AppCompat.Body1"
+            android:padding="8dp"
+            android:textAlignment="center"
+            android:fontFamily="@font/aladin"
+            android:layout_marginTop="150dp"
+            />-->
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="150dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:background="@drawable/style_spinner"

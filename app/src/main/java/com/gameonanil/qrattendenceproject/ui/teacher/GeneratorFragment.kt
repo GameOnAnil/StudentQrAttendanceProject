@@ -139,6 +139,7 @@ class GeneratorFragment : Fragment() {
             val newTeacherId = "$teacherId/$subjectText"
             val bitmap = generateQRCode(newTeacherId)
             imageViewQR.setImageBitmap(bitmap)
+            Log.d(TAG, "generateOnStart: QR GENEREATED:$newTeacherId")
            
         }
     }
