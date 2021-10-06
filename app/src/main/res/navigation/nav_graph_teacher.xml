@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_main_teacher" >
 
         <argument
-            android:name="semText"
+            android:name="subjectText"
             app:argType="string"/>
         <action
             android:id="@+id/action_mainTeacherFragment_to_studentsDetailFragment"
@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_generator" >
 
         <argument
-            android:name="semText"
+            android:name="subjectText"
             app:argType="string"
             />
     </fragment>
@@ -44,7 +44,7 @@
             android:name="userDetail"
             app:argType="com.gameonanil.qrattendenceproject.model.Student"/>
         <argument
-            android:name="semText"
+            android:name="subjectText"
             app:argType="string"/>
 
     </fragment>
@@ -54,7 +54,7 @@
         android:label="fragment_search_attendance"
         tools:layout="@layout/fragment_search_attendance" >
         <argument
-            android:name="semText"
+            android:name="subjectText"
             app:argType="string"
             />
         <action
@@ -70,7 +70,7 @@
             android:name="dateText"
             app:argType="string"/>
         <argument
-            android:name="semText"
+            android:name="subjectText"
             app:argType="string"
             />
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/semFragment"
-        android:name="com.gameonanil.qrattendenceproject.ui.teacher.SemFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.teacher.SubjectFragment"
         android:label="fragment_sem"
         tools:layout="@layout/fragment_sem" >
         <action

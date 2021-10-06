@@ -55,7 +55,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private lateinit var adapter: AttendanceAdapter
     private lateinit var attendanceList: MutableList<Student>
     private lateinit var teacherId: String
-    private lateinit var semText: String
+    private lateinit var subjectText: String
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var cell: Cell? = null
     private var row: Row? = null
@@ -71,7 +71,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         _binding = FragmentMainTeacherBinding.inflate(inflater, container, false)
 
         /**Setting Up Toolbar*/
-       val navHostFragment = NavHostFragment.findNavController(this);
+        val navHostFragment = NavHostFragment.findNavController(this);
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -92,7 +92,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             NavHostFragment.findNavController(this).navigateUp()
         }
 
-        semText = MainTeacherFragmentArgs.fromBundle(requireArguments()).semText
+        subjectText = MainTeacherFragmentArgs.fromBundle(requireArguments()).subjectText
 
         attendanceList = mutableListOf()
         auth = FirebaseAuth.getInstance()
@@ -108,7 +108,9 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         binding.apply {
             fabTeacher.setOnClickListener {
                 val action =
-                    MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment(semText)
+                    MainTeacherFragmentDirections.actionMainTeacherFragmentToGeneratorFragment(
+                        subjectText
+                    )
                 findNavController().navigate(action)
             }
 
@@ -126,12 +128,12 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             }
 
 
-
         }
 
         return binding.root
     }
-    private fun initListFromDb(){
+
+    private fun initListFromDb() {
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
@@ -140,8 +142,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
-            .collection("semester")
-            .document(semText)
+            .collection("subject")
+            .document(subjectText)
             .collection("date")
             .document(formattedDate)
             .collection("student_list")
@@ -181,7 +183,9 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
         if (item.itemId == R.id.itemSearchAttendance) {
             val action =
-                MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment(semText)
+                MainTeacherFragmentDirections.actionMainTeacherFragmentToSearchAttendanceFragment(
+                    subjectText
+                )
             findNavController().navigate(action)
         }
         return super.onOptionsItemSelected(item)
@@ -299,51 +303,31 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
         }
     }
-/*
+
     private fun decreaseTotalAttendance(studentId: String) {
         Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
-        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
-        teacherReference.get().addOnSuccessListener {
-            val currentTeacher = it.toObject(User::class.java)
-            val subject = currentTeacher!!.subject
-            val semArray = currentTeacher.semester
-            var index: Int? = null
-            for (semIndex in semArray!!.indices){
-                if (semArray[semIndex]==semText){
-                    index=semIndex
+        val studentDocRef = firestore.collection("student")
+            .document(studentId)
+            .collection("subject")
+            .document(subjectText)
+        Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
+
+        studentDocRef.get().addOnCompleteListener { docSnapshot ->
+            /** When student subject attendance count exists**/
+            if (docSnapshot.result!!.exists()) {
+                Log.d(TAG, "decreaseTotalAttendance:  EXIST")
+                val totalAttendance =
+                    docSnapshot.result!!["total_attendance"].toString().toInt()
+                if (totalAttendance > 0) {
+                    studentDocRef.update("total_attendance", FieldValue.increment(-1))
+                    Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
                 }
-            }
-            Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty()||index!=null) {
-                val studentDocRef = firestore.collection("student")
-                    .document(studentId)
-                    .collection("subject")
-                    .document(subject[index!!])
-                Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
-
-                studentDocRef.get().addOnCompleteListener { docSnapshot ->
-                    *//** When student subject attendance count exists**//*
-                    if (docSnapshot.result!!.exists()) {
-                        Log.d(TAG, "decreaseTotalAttendance:  EXIST")
-                        val totalAttendance =
-                            docSnapshot.result!!["total_attendance"].toString().toInt()
-                        if (totalAttendance > 0) {
-                            studentDocRef.update("total_attendance", FieldValue.increment(-1))
-                            Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
-                        }
-
-                    }
-                }
-
 
             } else {
-                Log.d(TAG, "increaseTotalAttendance: Error: Coundn't find subject")
+                Log.d(TAG, "increaseTotalAttendance: Error:Document Doesnt Exixt")
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
         }
-
-    }*/
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -352,7 +336,10 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
     override fun handleItemClicked(position: Int, user: Student) {
         val action =
-            MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(user,semText)
+            MainTeacherFragmentDirections.actionMainTeacherFragmentToStudentsDetailFragment(
+                user,
+                subjectText
+            )
         findNavController().navigate(action)
     }
 
@@ -365,8 +352,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
-            .collection("semester")
-            .document(semText)
+            .collection("subject")
+            .document(subjectText)
             .collection("date")
             .document(formattedDate)
             .collection("student_list")
@@ -387,7 +374,7 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        //decreaseTotalAttendance(currentUid)
+                        decreaseTotalAttendance(currentUid)
 
                     }
                     .addOnFailureListener { e ->

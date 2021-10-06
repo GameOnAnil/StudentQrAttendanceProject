@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -21,7 +20,6 @@ import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.adapter.NewAttendanceAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentNewAttendanceBinding
 import com.gameonanil.qrattendenceproject.model.Student
-import com.gameonanil.qrattendenceproject.model.Teacher
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -57,7 +55,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     private lateinit var attendanceList: MutableList<Student>
     private lateinit var teacherId: String
     private lateinit var dateText: String
-    private lateinit var semText: String
+    private lateinit var subjectText: String
     private var cell: Cell? = null
     private var row: Row? = null
     private lateinit var defaultStyle: CellStyle
@@ -99,7 +97,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         adapter = NewAttendanceAdapter(requireActivity(), attendanceList, this)
         teacherId = auth.currentUser!!.uid
 
-        semText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).semText
+        subjectText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).subjectText
         dateText = NewAttendanceFragmentArgs.fromBundle(requireArguments()).dateText
         getDataFromDb(dateText)
         currentDate = dateText
@@ -131,8 +129,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         val collection = firestore
             .collection("attendance")
             .document(teacherId)
-            .collection("semester")
-            .document(semText)
+            .collection("subject")
+            .document(subjectText)
             .collection("date")
             .document(dateText)
             .collection("student_list")
@@ -156,7 +154,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
     override fun handleItemClicked(position: Int, user: Student) {
         val currentUser = attendanceList[position]
         val action =
-            NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser,semText)
+            NewAttendanceFragmentDirections.actionNewAttendanceToStudentsDetailFragment(currentUser,subjectText)
         findNavController().navigate(action)
 
     }
@@ -172,8 +170,8 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                 val collection = firestore
                     .collection("attendance")
                     .document(teacherId)
-                    .collection("semester")
-                    .document(semText)
+                    .collection("subject")
+                    .document(subjectText)
                     .collection("date")
                     .document(dateText)
                     .collection("student_list")
@@ -192,7 +190,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
                             Toast.LENGTH_SHORT
                         ).show()
 
-                       // decreaseTotalAttendance(currentUid)
+                        decreaseTotalAttendance(currentUid)
                     }.addOnFailureListener {
                         Log.d(TAG, "handleDeleteClicked: ERROR: ${it.message.toString()}")
                     }
@@ -312,50 +310,30 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
         }
     }
 
-  /*  private fun decreaseTotalAttendance(studentId: String) {
+    private fun decreaseTotalAttendance(studentId: String) {
         Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
-        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
-        teacherReference.get().addOnSuccessListener {
-            val currentTeacher = it.toObject(Teacher::class.java)
-            val subject = currentTeacher!!.subject
-            val semArray = currentTeacher.semester
-            var index: Int? = null
-            for (semIndex in semArray!!.indices){
-                if (semArray[semIndex]==semText){
-                    index=semIndex
+        val studentDocRef = firestore.collection("student")
+            .document(studentId)
+            .collection("subject")
+            .document(subjectText)
+        Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
+
+        studentDocRef.get().addOnCompleteListener { docSnapshot ->
+            /** When student subject attendance count exists**/
+            if (docSnapshot.result!!.exists()) {
+                Log.d(TAG, "decreaseTotalAttendance:  EXIST")
+                val totalAttendance =
+                    docSnapshot.result!!["total_attendance"].toString().toInt()
+                if (totalAttendance > 0) {
+                    studentDocRef.update("total_attendance", FieldValue.increment(-1))
+                    Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
                 }
-            }
-            Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty()||index!=null) {
-                val studentDocRef = firestore.collection("student")
-                    .document(studentId)
-                    .collection("subject")
-                    .document(subject[index!!])
-                Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
-
-                studentDocRef.get().addOnCompleteListener { docSnapshot ->
-                    *//** When student subject attendance count exists**//*
-                    if (docSnapshot.result!!.exists()) {
-                        Log.d(TAG, "decreaseTotalAttendance:  EXIST")
-                        val totalAttendance =
-                            docSnapshot.result!!["total_attendance"].toString().toInt()
-                        if (totalAttendance > 0) {
-                            studentDocRef.update("total_attendance", FieldValue.increment(-1))
-                            Log.d(TAG, "decreaseTotalAttendance: UPDATED!!!!!!!")
-                        }
-
-                    }
-                }
-
 
             } else {
-                Log.d(TAG, "increaseTotalAttendance: Error: Coundn't find subject")
+                Log.d(TAG, "increaseTotalAttendance: Error:Document Doesnt Exixt")
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
         }
-
-    }*/
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)

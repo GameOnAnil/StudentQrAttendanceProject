@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Password" />
+
         <EditText
             android:id="@+id/etAddress"
             android:layout_width="match_parent"
@@ -64,15 +65,44 @@
             android:hint="Enter Contact No." />
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.9"
+                android:drawableStart="@drawable/ic_book"
+                android:drawablePadding="10dp"
+                android:textAlignment="center"/>
+
+            <Button
+                android:id="@+id/button_add_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_weight="0.1"
+                android:background="@color/blue3"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/button_add_teacher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             android:background="@drawable/round_button"
             android:paddingStart="10dp"
             android:paddingTop="15dp"

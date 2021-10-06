@@ -34,7 +34,7 @@ class StudentsDetailFragment : Fragment() {
     private lateinit var currentUser : Student
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
-    private lateinit var semText:String
+    private lateinit var subjectText:String
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -64,7 +64,7 @@ class StudentsDetailFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        semText = StudentsDetailFragmentArgs.fromBundle(requireArguments()).semText
+        subjectText = StudentsDetailFragmentArgs.fromBundle(requireArguments()).subjectText
 
 
         binding.apply {
@@ -74,30 +74,20 @@ class StudentsDetailFragment : Fragment() {
             currentUser.address?.let{tvAddress.text = it}
 
 
-            //displayTotalAttendance()
+           displayTotalAttendance()
         }
 
         return binding.root
     }
-/*
+
     private fun displayTotalAttendance(){
-        val teacherReference = firestore.collection("users").document(auth.currentUser!!.uid)
-        teacherReference.get().addOnSuccessListener {
-            val currentTeacher = it.toObject(User::class.java)
-            val subject = currentTeacher!!.subject
-            val semArray = currentTeacher.semester
-            var index: Int? = null
-            for (semIndex in semArray!!.indices){
-                if (semArray[semIndex]==semText){
-                    index=semIndex
-                }
-            }
+
             val studentUid = currentUser.uid
             val docRef = firestore.collection("student")
                 .document(studentUid!!)
                 .collection("subject")
-                .document(subject!![index!!])
-            Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subject[index]}")
+                .document(subjectText)
+            Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subjectText}")
             docRef.get().addOnSuccessListener { documentSnapshot->
                 if (documentSnapshot.exists()){
                     val totalAttendance = documentSnapshot["total_attendance"].toString()
@@ -113,11 +103,8 @@ class StudentsDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
                 binding.progressbarStudentDetail.isVisible = false
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
-            binding.progressbarStudentDetail.isVisible = false
-        }
-    }*/
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_logout, menu)

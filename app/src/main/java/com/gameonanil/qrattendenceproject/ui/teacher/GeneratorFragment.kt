@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -36,7 +35,7 @@ class GeneratorFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var semesterText: String
+    private lateinit var subjectText: String
     private lateinit var teacherId: String
 
     override fun onCreateView(
@@ -62,7 +61,7 @@ class GeneratorFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        semesterText = GeneratorFragmentArgs.fromBundle(requireArguments()).semText
+        subjectText = GeneratorFragmentArgs.fromBundle(requireArguments()).subjectText
         teacherId = auth.currentUser!!.uid
 
 
@@ -80,7 +79,7 @@ class GeneratorFragment : Fragment() {
         val accessDocReference = firestore
             .collection("attendance")
             .document(teacherId)
-            .collection("semester")
+            .collection("subject")
             .document(semText)
             .collection("date")
             .document(formattedDate)
@@ -123,21 +122,21 @@ class GeneratorFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         if (teacherId.isNotEmpty()){
-            initAccessTrue(teacherId,semesterText)
+            initAccessTrue(teacherId,subjectText)
         }
     }
 
     override fun onStop() {
         super.onStop()
         if (teacherId.isNotEmpty()){
-            setAccessFalse(teacherId,semesterText)
+            setAccessFalse(teacherId,subjectText)
         }
     }
 
     private fun generateOnStart(){
         binding.apply {
             val teacherId = auth.currentUser!!.uid
-            val newTeacherId = teacherId+semesterText
+            val newTeacherId = "$teacherId/$subjectText"
             val bitmap = generateQRCode(newTeacherId)
             imageViewQR.setImageBitmap(bitmap)
            

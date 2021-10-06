@@ -34,7 +34,8 @@ class StudentActivity : AppCompatActivity() {
     private lateinit var collectionRef: CollectionReference
     private lateinit var currentUid: String
     private lateinit var binding: ActivityStudentBinding
-    private lateinit var semesterTextFromQr: String
+    private lateinit var subjectTextFromQr: String
+    private lateinit var subjectText: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,7 @@ class StudentActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
         collectionRef = firestore.collection("attendance")
         currentUid = auth.currentUser!!.uid
+        subjectText = ""
 
 
         binding.apply {
@@ -97,10 +99,14 @@ class StudentActivity : AppCompatActivity() {
                 } else {
                     Log.d(TAG, "onActivityResult: Scanned:${result.contents}")
                     val teacherIdPlusSem = result.contents.toString()
-                    semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem, 3)
-                    val newTeacherId = teacherIdPlusSem.dropLast(3)
-                    checkAccess(newTeacherId, semesterTextFromQr)
-                    // addStudentToDb(newTeacherId,semesterTextFromQr)
+                    // semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem, 3)
+                    subjectTextFromQr = teacherIdPlusSem.substringAfterLast("/")
+                    subjectText = subjectTextFromQr
+                    Log.d(TAG, "onActivityResult: SUBSTIRNG: SEMESTERteXT =$subjectTextFromQr")
+                    //  val newTeacherId = teacherIdPlusSem.dropLast(3)
+                    val newTeacherId = teacherIdPlusSem.substringBefore("/")
+                    Log.d(TAG, "onActivityResult: NEWTEACHERID=$newTeacherId")
+                    checkAccess(newTeacherId, subjectTextFromQr)
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data)
@@ -108,7 +114,7 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAccess(teacherId: String, semText: String) {
+    private fun checkAccess(teacherId: String, subjectText: String) {
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
@@ -116,8 +122,8 @@ class StudentActivity : AppCompatActivity() {
         val accessDocReference = firestore
             .collection("attendance")
             .document(teacherId)
-            .collection("semester")
-            .document(semText)
+            .collection("subject")
+            .document(subjectText)
             .collection("date")
             .document(formattedDate)
             .collection("access")
@@ -128,7 +134,7 @@ class StudentActivity : AppCompatActivity() {
                 val accessCheck = documentSnapnot["access_allowed"]
                 Log.d(TAG, "checkAccess: checkAcces=${accessCheck}")
                 if (accessCheck == true) {
-                    addStudentToDb(teacherId, semText)
+                    addStudentToDb(teacherId, subjectText)
                 } else {
                     Toast.makeText(
                         this,
@@ -151,7 +157,7 @@ class StudentActivity : AppCompatActivity() {
         return lastnChars
     }
 
-    private fun addStudentToDb(teacherId: String, semText: String) {
+    private fun addStudentToDb(teacherId: String, subjectText: String) {
 
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
@@ -162,8 +168,8 @@ class StudentActivity : AppCompatActivity() {
 
             val docRef = collectionRef
                 .document(teacherId)
-                .collection("semester")
-                .document(semesterTextFromQr)
+                .collection("subject")
+                .document(subjectTextFromQr)
                 .collection("date")
                 .document(formattedDate.toString())
                 .collection("student_list")
@@ -181,7 +187,7 @@ class StudentActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             Log.d(TAG, "addStudentToDb: ADD CALLED!!!!!!!!!")
-                           // increaseTotalAttendance(teacherId)
+                            increaseTotalAttendance(teacherId, subjectText)
                         }.addOnFailureListener {
                             Toast.makeText(this, "Error:${it.message}", Toast.LENGTH_SHORT).show()
                         }
@@ -193,63 +199,44 @@ class StudentActivity : AppCompatActivity() {
 
 
     }
-/*
-    private fun increaseTotalAttendance(teacherId: String) {
-        val teacherReference = firestore.collection("users").document(teacherId)
-        teacherReference.get().addOnSuccessListener {
-            val currentTeacher = it.toObject(User::class.java)
-            val subject = currentTeacher!!.subject
-            val semArray = currentTeacher.semester
-            var index: Int? = null
-            for (semIndex in semArray!!.indices) {
-                if (semArray[semIndex] == semesterTextFromQr) {
-                    index = semIndex
-                }
+
+    private fun increaseTotalAttendance(teacherId: String, subjectText: String) {
+
+        val studentDocRef = firestore.collection("student")
+            .document(currentUid)
+            .collection("subject")
+            .document(subjectText)
+        Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
+
+        studentDocRef.get().addOnCompleteListener { docSnapshot ->
+            /** When student subject attendance count exists**/
+            if (docSnapshot.result!!.exists()) {
+                studentDocRef
+                    .update("total_attendance", FieldValue.increment(1))
+                    .addOnSuccessListener {
+                        Log.d(TAG, "increaseTotalAttendance: Totalattendance updated")
+                    }
+                    .addOnFailureListener {
+                        Log.d(
+                            TAG,
+                            "increaseTotalAttendance: totalattendance not updated:${it.message}"
+                        )
+                    }
             }
-            Log.d(TAG, "increaseTotalAttendance: Got teacher and subject=$subject")
-            if (subject!!.isNotEmpty() || index != null) {
-                val studentDocRef = firestore.collection("student")
-                    .document(currentUid)
-                    .collection("subject")
-                    .document(subject[index!!])
-                Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
-
-                studentDocRef.get().addOnCompleteListener { docSnapshot ->
-                    *//** When student subject attendance count exists**//*
-                    if (docSnapshot.result!!.exists()) {
-                        studentDocRef
-                            .update("total_attendance", FieldValue.increment(1))
-                            .addOnSuccessListener {
-                                Log.d(TAG, "increaseTotalAttendance: Totalattendance updated")
-                            }
-                            .addOnFailureListener {
-                                Log.d(
-                                    TAG,
-                                    "increaseTotalAttendance: totalattendance not updated:${it.message}"
-                                )
-                            }
-                    }
-                    *//** When student subject attendance count Doesn't exists**//*
-                    else {
-                        val attendanceHashMap = hashMapOf<String, Int>("total_attendance" to 1)
-                        studentDocRef.set(attendanceHashMap).addOnSuccessListener {
-                            Log.d(TAG, "increaseTotalAttendance: new created")
-                        }.addOnFailureListener {
-                            Log.d(TAG, "increaseTotalAttendance: Error:${it.message}")
-                        }
-
-                    }
+            /** When student subject attendance count Doesn't exists**/
+            else {
+                val attendanceHashMap = hashMapOf<String, Int>("total_attendance" to 1)
+                studentDocRef.set(attendanceHashMap).addOnSuccessListener {
+                    Log.d(TAG, "increaseTotalAttendance: new created")
+                }.addOnFailureListener {
+                    Log.d(TAG, "increaseTotalAttendance: Error:${it.message}")
                 }
 
-
-            } else {
-                Log.d(TAG, "increaseTotalAttendance: Error: Coundn't find subject")
             }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Error:${it.message}", Toast.LENGTH_SHORT).show()
         }
 
-    }*/
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         MenuInflater(this).inflate(R.menu.menu_logout, menu)

@@ -3,7 +3,6 @@ package com.gameonanil.qrattendenceproject.ui.teacher
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.DatePicker
 import android.widget.Toast
@@ -18,7 +17,6 @@ import com.gameonanil.qrattendenceproject.databinding.FragmentSearchAttendanceBi
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
-import java.time.Month
 import java.util.*
 
 
@@ -30,7 +28,7 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private lateinit var dateText: String
-    private lateinit var semText: String
+    private lateinit var subjectText: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,13 +57,13 @@ class SearchAttendanceFragment : Fragment(), DatePickerDialog.OnDateSetListener 
         }
 
         dateText = ""
-        semText = SearchAttendanceFragmentArgs.fromBundle(requireArguments()).semText
+        subjectText = SearchAttendanceFragmentArgs.fromBundle(requireArguments()).subjectText
 
         binding.apply {
             buttonSearchAttendance.setOnClickListener {
                 if(etEnterDate.text!!.isNotBlank()){
                     val action =
-                        SearchAttendanceFragmentDirections.actionSearchAttendanceFragmentToNewAttendance(dateText,semText)
+                        SearchAttendanceFragmentDirections.actionSearchAttendanceFragmentToNewAttendance(dateText,subjectText)
                     findNavController().navigate(action)
                 }else{
                     Toast.makeText(requireContext(), "Please Enter Date First", Toast.LENGTH_SHORT).show()

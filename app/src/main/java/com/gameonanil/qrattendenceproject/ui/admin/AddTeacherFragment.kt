@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -32,6 +34,7 @@ class AddTeacherFragment : Fragment() {
     private var nameString: String = ""
     private var phoneString: String = ""
     private var addressString: String = ""
+    private lateinit var spinnerArray: ArrayList<String>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,12 +66,22 @@ class AddTeacherFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
+        spinnerArray = ArrayList()
+        spinnerArray.add("")
+        spinnerArray.add("Java")
+
+        val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.subject_drop_down, spinnerArray)
+        binding.spinner.adapter = spinnerAdapter
 
         binding.apply {
 
             buttonAddTeacher.setOnClickListener {
                 if (etUserName.text.toString().isEmpty()) {
-                    Toast.makeText(requireContext(), "Please Enter User Name", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "Please Enter User Name",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     return@setOnClickListener
                 }
@@ -78,7 +91,11 @@ class AddTeacherFragment : Fragment() {
                     return@setOnClickListener
                 }
                 if (etPass.text.toString().isEmpty()) {
-                    Toast.makeText(requireContext(), "Please Enter Password", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "Please Enter Password",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     return@setOnClickListener
                 }
@@ -98,6 +115,11 @@ class AddTeacherFragment : Fragment() {
                 }
             }
 
+            buttonAddSub.setOnClickListener {
+                spinnerArray.add("Java1")
+                spinnerAdapter.notifyDataSetChanged()
+            }
+
         }
 
 
@@ -110,7 +132,11 @@ class AddTeacherFragment : Fragment() {
                 if (task.isSuccessful) {
                     val newTeacherUser: FirebaseUser = task.result!!.user!!
 
-                    Toast.makeText(requireContext(), "User SignUp Successful", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "User SignUp Successful",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     addDetailsToDb(newTeacherUser)
                 } else {
@@ -125,6 +151,8 @@ class AddTeacherFragment : Fragment() {
     }
 
     private fun addDetailsToDb(user: FirebaseUser) {
+        val finalSubArray = spinnerArray
+        finalSubArray.removeAt(0)
         val collectionReference = firestore.collection("users")
         val userModel = Teacher(
             uid = user.uid,
@@ -132,16 +160,22 @@ class AddTeacherFragment : Fragment() {
             address = addressString,
             phone = phoneString,
             user_type = "teacher",
-            username = nameString
+            username = nameString,
+            subject = finalSubArray
         )
 
         collectionReference.document(user.uid).set(userModel)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Detail Added Successfully", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Detail Added Successfully",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
                 mAuth.signOut()
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT)
+                    .show()
                 Log.d(TAG, "addDetailsToDb: ERROR: ${it.message}")
             }
     }

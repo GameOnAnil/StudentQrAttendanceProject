@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/search_background"
-    tools:context=".ui.teacher.SemFragment"
+    tools:context=".ui.teacher.SubjectFragment"
     android:theme="@style/CustomThemeForSem">
 
     <androidx.appcompat.widget.Toolbar
@@ -55,7 +55,7 @@
                 android:id="@+id/autoCompleteSemester"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Select Semester"
+                android:text="Select Subject"
                 android:textSize="18sp"
                 android:inputType="none"
                 android:padding="8dp"

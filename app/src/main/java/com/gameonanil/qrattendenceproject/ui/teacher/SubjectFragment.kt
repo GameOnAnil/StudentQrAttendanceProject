@@ -15,12 +15,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentSemBinding
+import com.gameonanil.qrattendenceproject.model.Teacher
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class SemFragment : Fragment() {
+class SubjectFragment : Fragment() {
     companion object {
         private const val TAG = "SemFragment"
     }
@@ -30,8 +31,8 @@ class SemFragment : Fragment() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var mAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-   private lateinit var semText: String
-    private var semType: List<String>? = null
+   private lateinit var subjectText: String
+    private var subjectType: List<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,8 +62,10 @@ class SemFragment : Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
-        semText = ""
+        subjectText = ""
 
+
+        loadSemester()
 
         binding.apply {
             autoCompleteSemester.inputType = EditorInfo.TYPE_NULL
@@ -74,7 +77,7 @@ class SemFragment : Fragment() {
 
         return binding.root
     }
-/*
+
     private fun loadSemester() {
         val teacherId = mAuth.currentUser!!.uid
         val teacherDocRef = firestore.collection("users").document(teacherId)
@@ -82,14 +85,14 @@ class SemFragment : Fragment() {
         teacherDocRef.get()
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
-                    val currentUser = documentSnapshot.toObject(User::class.java)
-                    semType = currentUser!!.semester
-                    Log.d(TAG, "loadSemester: semType:$semType")
+                    val currentUser = documentSnapshot.toObject(Teacher::class.java)
+                    subjectType = currentUser!!.subject
+                    Log.d(TAG, "loadSemester: semType:$subjectType")
 
                   //  val semTypes = resources.getStringArray(R.array.sem_temp)
                     val semArrayList:ArrayList<String>  = ArrayList()
-                    for (currentSem in semType!!){
-                        semArrayList.add(currentSem)
+                    for (currentSub in subjectType!!){
+                        semArrayList.add(currentSub)
                     }
                     if (semArrayList.isNotEmpty()){
                         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, semArrayList)
@@ -100,15 +103,15 @@ class SemFragment : Fragment() {
                 Log.d(TAG, "loadSemester: Error:${it.message}")
                 Toast.makeText(requireContext(), "Failed to load Sem:${it.message}", Toast.LENGTH_SHORT).show()
             }
-    }*/
+    }
 
    private fun goToNextPage() {
-       // semText = binding.autoCompleteSemester.text.toString()
-       semText = "4th"
-       if (semText==""||semText=="Select Semester"){
-           Toast.makeText(requireContext(), "Semester Empty", Toast.LENGTH_SHORT).show()
+        subjectText = binding.autoCompleteSemester.text.toString()
+
+       if (subjectText==""||subjectText=="Select Subject"){
+           Toast.makeText(requireContext(), "Subject Empty", Toast.LENGTH_SHORT).show()
        }else{
-           val action = SemFragmentDirections.actionSemFragmentToMainTeacherFragment(semText)
+           val action = SubjectFragmentDirections.actionSemFragmentToMainTeacherFragment(subjectText)
            findNavController().navigate(action)
        }
 
