@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
@@ -72,7 +73,6 @@ class AddTeacherFragment : Fragment() {
 
         spinnerArray = ArrayList()
         spinnerArray.add("")
-        spinnerArray.add("Java")
 
         val spinnerAdapter = ArrayAdapter(requireContext(), R.layout.subject_drop_down, spinnerArray)
         binding.spinner.adapter = spinnerAdapter
@@ -109,6 +109,15 @@ class AddTeacherFragment : Fragment() {
                 }
                 if (etAddress.text!!.isNotEmpty()) {
                     addressString = etAddress.text.toString()
+                }
+
+                if(spinnerArray.isEmpty()||spinnerArray.size==1){
+                    Toast.makeText(
+                        requireContext(),
+                        "Please Add Atleast 1 Subject",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
                 }
 
 
@@ -169,12 +178,6 @@ class AddTeacherFragment : Fragment() {
                 if (task.isSuccessful) {
                     val newTeacherUser: FirebaseUser = task.result!!.user!!
 
-                    Toast.makeText(
-                        requireContext(),
-                        "User SignUp Successful",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
                     addDetailsToDb(newTeacherUser)
                 } else {
                     Toast.makeText(
@@ -205,11 +208,12 @@ class AddTeacherFragment : Fragment() {
             .addOnSuccessListener {
                 Toast.makeText(
                     requireContext(),
-                    "Detail Added Successfully",
+                    "SignUp Successful",
                     Toast.LENGTH_SHORT
                 )
                     .show()
                 mAuth.signOut()
+                findNavController().navigateUp()
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT)
                     .show()

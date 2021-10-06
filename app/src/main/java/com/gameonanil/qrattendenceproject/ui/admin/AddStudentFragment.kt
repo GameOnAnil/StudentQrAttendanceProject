@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
@@ -125,8 +126,7 @@ class AddStudentFragment : Fragment() {
                 if (task.isSuccessful) {
                     val newTeacherUser: FirebaseUser = task.result!!.user!!
 
-                    Toast.makeText(requireContext(), "User SignUp Successful", Toast.LENGTH_SHORT)
-                        .show()
+
                     addDetailsToDb(newTeacherUser)
                 } else {
                     Toast.makeText(
@@ -153,9 +153,10 @@ class AddStudentFragment : Fragment() {
 
         collectionReference.document(user.uid).set(userModel)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Detail Added Successfully", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "User SignUp Successful", Toast.LENGTH_SHORT)
                     .show()
                 mAuth.signOut()
+                findNavController().navigateUp()
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "addDetailsToDb: ERROR: ${it.message}")
