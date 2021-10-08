@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_mainAdminFragment_to_addStudentFragment"
             app:destination="@id/addStudentFragment" />
+        <action
+            android:id="@+id/action_mainAdminFragment_to_manageUserFragment"
+            app:destination="@id/manageUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTeacherFragment"
@@ -26,4 +29,9 @@
         android:name="com.gameonanil.qrattendenceproject.ui.admin.AddStudentFragment"
         android:label="fragment_add_student"
         tools:layout="@layout/fragment_add_student" />
+    <fragment
+        android:id="@+id/manageUserFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.admin.ManageUserFragment"
+        android:label="fragment_manage_user"
+        tools:layout="@layout/fragment_manage_user" />
 </navigation>

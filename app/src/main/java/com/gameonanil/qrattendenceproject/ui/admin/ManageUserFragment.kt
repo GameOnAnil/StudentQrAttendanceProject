@@ -1,39 +1,33 @@
 package com.gameonanil.qrattendenceproject.ui.admin
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
-import com.gameonanil.qrattendenceproject.databinding.FragmentMainAdminBinding
-import com.gameonanil.qrattendenceproject.databinding.FragmentMainTeacherBinding
+import com.gameonanil.qrattendenceproject.databinding.FragmentAddTeacherBinding
+import com.gameonanil.qrattendenceproject.databinding.FragmentManageUserBinding
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
-import com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragment
-import com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragmentDirections
 import com.google.firebase.auth.FirebaseAuth
 
 
-class MainAdminFragment : Fragment() {
-    companion object{
-        private const val TAG = "MainAdminFragment"
-    }
-
-    private var _binding: FragmentMainAdminBinding? = null
+class ManageUserFragment : Fragment() {
+    private var _binding: FragmentManageUserBinding? = null
     private val binding get() = _binding!!
-    private lateinit var  appBarConfiguration:AppBarConfiguration
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentMainAdminBinding.inflate(layoutInflater,container,false)
+       _binding = FragmentManageUserBinding.inflate(inflater,container,false)
 
         /**Setting Up Toolbar*/
         val navHostFragment = NavHostFragment.findNavController(this);
@@ -44,47 +38,24 @@ class MainAdminFragment : Fragment() {
             )
         )
         NavigationUI.setupWithNavController(
-            binding.toolbarAdminMain,
+            binding.toolbarManageUser,
             navHostFragment,
             appBarConfiguration
         )
 
-
         /** TO USE OPTIONS MENU*/
         setHasOptionsMenu(true)
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarAdminMain)
-        binding.toolbarAdminMain.setNavigationOnClickListener {
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarManageUser)
+        binding.toolbarManageUser.setNavigationOnClickListener {
             NavHostFragment.findNavController(this).navigateUp()
         }
-
-
-
-        binding.apply {
-            buttonAddStudent.setOnClickListener {
-               val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddStudentFragment()
-                findNavController().navigate(action)
-            }
-
-            buttonAddTeacher.setOnClickListener {
-                val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddTeacherFragment()
-                findNavController().navigate(action)
-            }
-
-            buttonRemoveUser.setOnClickListener {
-               val action = MainAdminFragmentDirections.actionMainAdminFragmentToManageUserFragment()
-                findNavController().navigate(action)
-            }
-        }
-
-
-
         return binding.root
     }
 
-    //handling options menu
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_logout, menu)
         super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_logout, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -96,9 +67,7 @@ class MainAdminFragment : Fragment() {
             startActivity(intent)
             requireActivity().finish()
         }
-
         return super.onOptionsItemSelected(item)
     }
-
 
 }
