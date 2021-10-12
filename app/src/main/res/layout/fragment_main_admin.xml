@@ -84,7 +84,7 @@
             android:paddingTop="15dp"
             android:paddingEnd="10dp"
             android:paddingBottom="15dp"
-            android:text="Remove User"
+            android:text="Manage Users"
             android:textColor="@color/white"
             android:textSize="18sp"
 

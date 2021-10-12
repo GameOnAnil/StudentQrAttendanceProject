@@ -127,7 +127,7 @@ class AddStudentFragment : Fragment() {
                     val newTeacherUser: FirebaseUser = task.result!!.user!!
 
 
-                    addDetailsToDb(newTeacherUser)
+                    addDetailsToDb(newTeacherUser,password)
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -139,11 +139,12 @@ class AddStudentFragment : Fragment() {
             }
     }
 
-    private fun addDetailsToDb(user: FirebaseUser) {
+    private fun addDetailsToDb(user: FirebaseUser,passwordText: String) {
         val collectionReference = firestore.collection("users")
         val userModel = Student(
             uid = user.uid,
             email = user.email,
+            password = passwordText,
             address = addressString,
             phone = phoneString,
             user_type = "student",
