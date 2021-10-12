@@ -78,11 +78,7 @@ class GeneratorFragment : Fragment() {
 
         val accessDocReference = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(semText)
-            .collection("date")
-            .document(formattedDate)
+            .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
             .document(teacherId)
 
@@ -102,11 +98,7 @@ class GeneratorFragment : Fragment() {
 
         val accessDocReference = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("semester")
-            .document(semText)
-            .collection("date")
-            .document(formattedDate)
+            .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
             .document(teacherId)
 

@@ -107,6 +107,7 @@ class StudentActivity : AppCompatActivity() {
                     val newTeacherId = teacherIdPlusSem.substringBefore("/")
                     Log.d(TAG, "onActivityResult: NEWTEACHERID=$newTeacherId")
                     checkAccess(newTeacherId, subjectTextFromQr)
+
                 }
             } else {
                 super.onActivityResult(requestCode, resultCode, data)
@@ -121,11 +122,7 @@ class StudentActivity : AppCompatActivity() {
 
         val accessDocReference = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(subjectText)
-            .collection("date")
-            .document(formattedDate)
+            .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
             .document(teacherId)
 
@@ -149,13 +146,7 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun getLastNCharsOfString(str: String, n: Int): String {
-        var lastnChars = str
-        if (lastnChars.length > n) {
-            lastnChars = lastnChars.substring(lastnChars.length - n, lastnChars.length)
-        }
-        return lastnChars
-    }
+
 
     private fun addStudentToDb(teacherId: String, subjectText: String) {
 
@@ -167,11 +158,7 @@ class StudentActivity : AppCompatActivity() {
             val userdata = it.toObject(Student::class.java)
 
             val docRef = collectionRef
-                .document(teacherId)
-                .collection("subject")
-                .document(subjectTextFromQr)
-                .collection("date")
-                .document(formattedDate.toString())
+                .document("$teacherId,$subjectText,$formattedDate")
                 .collection("student_list")
                 .document(currentUid)
 

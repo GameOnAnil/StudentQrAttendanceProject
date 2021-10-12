@@ -129,11 +129,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
 
         val collection = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(subjectText)
-            .collection("date")
-            .document(dateText)
+            .document("$teacherId,$subjectText,$dateText")
             .collection("student_list")
 
         collection.addSnapshotListener { snapshot, exception ->
@@ -170,11 +166,7 @@ class NewAttendanceFragment : Fragment(), NewAttendanceAdapter.OnAttendanceClick
 
                 val collection = firestore
                     .collection("attendance")
-                    .document(teacherId)
-                    .collection("subject")
-                    .document(subjectText)
-                    .collection("date")
-                    .document(dateText)
+                    .document("$teacherId,$subjectText,$dateText")
                     .collection("student_list")
 
                 val currentUid = attendanceList[position].uid.toString().trim()
