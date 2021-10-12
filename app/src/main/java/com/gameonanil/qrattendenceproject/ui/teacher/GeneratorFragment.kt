@@ -14,6 +14,7 @@ import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
+import com.gameonanil.qrattendenceproject.ui.student.StudentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
@@ -76,19 +77,35 @@ class GeneratorFragment : Fragment() {
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
 
-        val accessDocReference = firestore
-            .collection("attendance")
+        val teacherDocRef = firestore.collection("attendance")
             .document("$teacherId,$subjectText,$formattedDate")
-            .collection("access")
-            .document(teacherId)
+        val emptyHashMap = HashMap<String,String>()
+        emptyHashMap["dummyField"] = ""
 
-        val accessHashMap = HashMap<String,Boolean>()
-        accessHashMap["access_allowed"] = true
-        accessDocReference.set(accessHashMap).addOnSuccessListener {
-            Log.d(TAG, "setAccessFalse: ACCESS TRUE SUCESSFUL ")
+        /**JUST ADDING TEACHER ID FIELD WITH DUMMY TEXT**/
+        teacherDocRef.set(emptyHashMap).addOnSuccessListener {
+            /**NOW ADDING ACCESS FIELD**/
+            val accessDocReference = firestore
+                .collection("attendance")
+                .document("$teacherId,$subjectText,$formattedDate")
+                .collection("access")
+                .document(teacherId)
+
+            val accessHashMap = HashMap<String,Boolean>()
+            accessHashMap["access_allowed"] = true
+            accessDocReference.set(accessHashMap).addOnSuccessListener {
+                Log.d(TAG, "setAccessFalse: ACCESS TRUE SUCESSFUL ")
+            }.addOnFailureListener {
+                Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
+            }
+
+
+
         }.addOnFailureListener {
-            Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
+            Log.d(TAG, "checkAccess: ERROR:${it.message}")
         }
+
+
     }
 
     private fun setAccessFalse(teacherId:String,semText:String){

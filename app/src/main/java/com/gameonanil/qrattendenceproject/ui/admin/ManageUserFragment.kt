@@ -117,13 +117,15 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
 
     override fun handleDeleteClicked(position: Int) {
         val currentUser = mUserList[position]
-        // deleteFromUserCollection(currentUser)
+        val currantTeacherId = "LNd1qmYq2zdPaTOwsnM1lqNygnp2"
+        deleteFromUserCollection(currentUser)
         if (currentUser.user_type == "student") {
-            Log.d(TAG, "deleteFromUserCollection: usertype=${currentUser.user_type}")
             deleteFromAttendanceCount(currentUser)
         }
+        if (currentUser.user_type == "teacher") {
+            deleteWholeFromAttendance(currantTeacherId)
+        }
 
-        deleteTeacherFromAttendance(currentUser)
 
     }
 
@@ -139,7 +141,6 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
 
     private fun deleteFromAttendanceCount(currentUser: Users) {
         val collectionRef = firestore.collection("attendance_count")
-
         collectionRef.document(currentUser.uid.toString()).delete()
             .addOnSuccessListener {
                 Log.d(TAG, "deleteFromUserCollection: ATTENDANCE_COUNT COLLECTION DELETED")
@@ -148,21 +149,30 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
             }
     }
 
-    private fun deleteTeacherFromAttendance(currentUser: Users) {
-        deleteAccessDocument("fozXgmAxuUZjts2cHr0TzzwT7HB2", "C", "2021.10.06")
-        deleteSubjectListDocument("fozXgmAxuUZjts2cHr0TzzwT7HB2", "C", "2021.10.06")
-        deleteDateDocument("fozXgmAxuUZjts2cHr0TzzwT7HB2", "C")
+    private fun deleteWholeFromAttendance(currentTeacherId: String) {
+        val collectionRef = firestore
+            .collection("attendance")
+        collectionRef.get().addOnSuccessListener { QuerySnapshot ->
+            for (querySnapshot in QuerySnapshot) {
+                querySnapshot.reference.update("teacher", "")
+                Log.d(TAG, "deleteTeacherFromAttendance: teacherid=${querySnapshot.id}")
+                val extractedTeacherId = querySnapshot.id.substringBefore(",")
+                Log.d(TAG, "EXTRACTED TEACHERID:$extractedTeacherId and UID:${currentTeacherId}")
+                if (currentTeacherId == extractedTeacherId) {
+                    deleteAccessDocument(querySnapshot.id)
+                    deleteSubjectListDocument(querySnapshot.id)
+                }
+            }
+        }.addOnFailureListener {
+            Log.d(TAG, "FAILED TO GET TEACHER DOC.:${it.message}")
+        }
 
     }
 
-    private fun deleteAccessDocument(teacherId: String, subject: String, date: String) {
+    private fun deleteAccessDocument(uniqueTeacherId: String) {
         val collectionRef = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(subject)
-            .collection("date")
-            .document(date)
+            .document(uniqueTeacherId)
             .collection("access")
 
         collectionRef.get().addOnSuccessListener { querySnapshot ->
@@ -180,14 +190,10 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
         }
     }
 
-    private fun deleteSubjectListDocument(teacherId: String, subject: String, date: String) {
+    private fun deleteSubjectListDocument(uniqueTeacherId: String) {
         val collectionRef = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(subject)
-            .collection("date")
-            .document(date)
+            .document(uniqueTeacherId)
             .collection("student_list")
 
         collectionRef.get().addOnSuccessListener { querySnapshot ->
@@ -195,22 +201,19 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
                 Log.d(TAG, "DELETING STUDENTLIST: UID:${query.id}")
                 query.reference.delete()
             }
+            deleteTeacherUidDoc(uniqueTeacherId)
         }
     }
 
-    private fun deleteDateDocument(teacherId: String, subject: String) {
-        val collectionRef = firestore
+    private fun deleteTeacherUidDoc(uniqueTeacherId: String) {
+        val docRef = firestore
             .collection("attendance")
-            .document(teacherId)
-            .collection("subject")
-            .document(subject)
-            .collection("date")
-
-        collectionRef.get().addOnSuccessListener { querySnapshot ->
-            for (query in querySnapshot) {
-                Log.d(TAG, "DELETING DATE: UID:${query.id}")
-                query.reference.delete()
-            }
+            .document(uniqueTeacherId)
+        docRef.delete().addOnSuccessListener {
+            Log.d(TAG, "deleteTeacherUidDoc: Main Teacher deleted succcesfully")
+        }.addOnFailureListener {
+            Log.d(TAG, "deleteTeacherUidDoc: Error:${it.message}")
         }
     }
+
 }

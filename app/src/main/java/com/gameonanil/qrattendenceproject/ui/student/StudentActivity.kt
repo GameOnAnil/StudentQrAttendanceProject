@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class StudentActivity : AppCompatActivity() {
@@ -120,13 +121,14 @@ class StudentActivity : AppCompatActivity() {
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
 
+
         val accessDocReference = firestore
             .collection("attendance")
             .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
             .document(teacherId)
 
-        accessDocReference.get().addOnSuccessListener { documentSnapnot ->
+      accessDocReference.get().addOnSuccessListener { documentSnapnot ->
             if (documentSnapnot.exists()) {
                 val accessCheck = documentSnapnot["access_allowed"]
                 Log.d(TAG, "checkAccess: checkAcces=${accessCheck}")
