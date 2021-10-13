@@ -118,6 +118,8 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
     override fun handleDeleteClicked(position: Int) {
         val currentUser = mUserList[position]
         deleteFromUserCollection(currentUser)
+        initLoadUsers()
+
     }
 
     private fun deleteFromUserCollection(currentUser: Users) {
@@ -126,25 +128,55 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
             .addOnSuccessListener {
                 Log.d(TAG, "deleteFromUserCollection: USER COLLECTION DELETED")
                 if (currentUser.user_type == "student") {
-                    deleteFromAttendanceCount(currentUser)
+                    deleteAttendanceCountByStudent(currentUser)
                     deleteStudentFromDB(currentUser.uid.toString())
                 }
                 if (currentUser.user_type == "teacher") {
                     deleteWholeFromAttendance(currentTeacherId = currentUser.uid.toString())
+                    deleteAttendanceCountByTeacher(currentUser)
                 }
             }.addOnFailureListener {
                 Log.d(TAG, "FAILURE deleting usercollection:${it.message}")
             }
     }
 
-    private fun deleteFromAttendanceCount(currentUser: Users) {
+    private fun deleteAttendanceCountByTeacher(currentUser: Users) {
         val collectionRef = firestore.collection("attendance_count")
-        collectionRef.document(currentUser.uid.toString()).delete()
-            .addOnSuccessListener {
-                Log.d(TAG, "deleteFromUserCollection: ATTENDANCE_COUNT COLLECTION DELETED")
-            }.addOnFailureListener {
-                Log.d(TAG, "FAILURE deleting usercollection:${it.message}")
+        collectionRef.get().addOnSuccessListener { QuerySnapshot ->
+            for (documentSnapshot in QuerySnapshot) {
+                val subject = documentSnapshot.id.substringAfter(",")
+                for (item in currentUser.subject!!) {
+                    if (subject == item) {
+                        documentSnapshot.reference.delete().addOnSuccessListener {
+                            Log.d(TAG, "ATTENDANCE COUNT DELETE SUCCESS: ")
+                        }.addOnFailureListener {
+                            Log.d(TAG, "ATTENDANCE COUNT DELETE FAILURE:${it.message} ")
+                        }
+                    }
+                }
             }
+        }.addOnFailureListener {
+            Log.d(TAG, "FAIED TO GET ATTENDANCE COUNT COLLECTION:${it.message}")
+        }
+    }
+
+    private fun deleteAttendanceCountByStudent(currentUser: Users) {
+        val collectionRef = firestore.collection("attendance_count")
+        collectionRef.get().addOnSuccessListener { QuerySnapshot ->
+            for (documentSnapshot in QuerySnapshot) {
+                val studentUid = documentSnapshot.id.substringAfterLast(",")
+                if (studentUid == currentUser.uid) {
+                    documentSnapshot.reference.delete().addOnSuccessListener {
+                        Log.d(TAG, "ATTENDANCE COUNT DELETE SUCCESS: ")
+                    }.addOnFailureListener {
+                        Log.d(TAG, "ATTENDANCE COUNT DELETE FAILURE:${it.message} ")
+                    }
+                }
+            }
+
+        }.addOnFailureListener {
+            Log.d(TAG, "FAIED TO GET ATTENDANCE COUNT COLLECTION:${it.message}")
+        }
     }
 
     private fun deleteStudentFromDB(currentUserUID: String) {

@@ -12,4 +12,5 @@ data class Users(
     val address: String?="",
     val phone: String?="",
     val user_type: String?="",
+    val subject:List<String>?=null,
 ):Parcelable

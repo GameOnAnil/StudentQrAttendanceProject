@@ -40,6 +40,8 @@ class AddTeacherFragment : Fragment() {
     private var phoneString: String = ""
     private var addressString: String = ""
     private lateinit var spinnerArray: ArrayList<String>
+    private lateinit var adminEmail: String
+    private lateinit var adminPass:String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +69,10 @@ class AddTeacherFragment : Fragment() {
         binding.toolbarAddTeacher.setNavigationOnClickListener {
             NavHostFragment.findNavController(this).navigateUp()
         }
+
+        adminEmail = AddTeacherFragmentArgs.fromBundle(requireArguments()).adminEmail
+        adminPass = AddTeacherFragmentArgs.fromBundle(requireArguments()).adminPassword
+        Log.d(TAG, "onCreateView: TEACHR:EMAIL=$adminEmail and password=$adminPass")
 
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -147,6 +153,17 @@ class AddTeacherFragment : Fragment() {
         return binding.root
     }
 
+    private fun loginToAdmin(){
+        mAuth.signInWithEmailAndPassword(adminEmail,adminPass)
+            .addOnSuccessListener {
+                Log.d(TAG, "loginToAdmin: SUCCESS")
+                findNavController().navigateUp()
+            }.addOnFailureListener {
+                Log.d(TAG, "loginToAdmin: FAILED:${it.message}")
+                findNavController().navigateUp()
+            }
+    }
+
     private fun handleAddSubjectClicked(){
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = layoutInflater
@@ -206,6 +223,7 @@ class AddTeacherFragment : Fragment() {
 
         collectionReference.document(user.uid).set(userModel)
             .addOnSuccessListener {
+
                 Toast.makeText(
                     requireContext(),
                     "SignUp Successful",
@@ -213,7 +231,8 @@ class AddTeacherFragment : Fragment() {
                 )
                     .show()
                 mAuth.signOut()
-                findNavController().navigateUp()
+                loginToAdmin()
+
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT)
                     .show()

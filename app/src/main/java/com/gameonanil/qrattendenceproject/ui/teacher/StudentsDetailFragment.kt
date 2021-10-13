@@ -84,9 +84,8 @@ class StudentsDetailFragment : Fragment() {
 
             val studentUid = currentUser.uid
             val docRef = firestore.collection("attendance_count")
-                .document(studentUid!!)
-                .collection("subject")
-                .document(subjectText)
+                .document(studentUid!!+","+subjectText)
+
             Log.d(TAG, "onCreateView: studentUid:$studentUid, subject=${subjectText}")
             docRef.get().addOnSuccessListener { documentSnapshot->
                 if (documentSnapshot.exists()){

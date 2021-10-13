@@ -1,9 +1,11 @@
 package com.gameonanil.qrattendenceproject.ui.admin
 
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -27,6 +29,8 @@ class MainAdminFragment : Fragment() {
     private var _binding: FragmentMainAdminBinding? = null
     private val binding get() = _binding!!
     private lateinit var  appBarConfiguration:AppBarConfiguration
+    private lateinit var adminEmail: String
+    private lateinit var adminPass: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,15 +62,21 @@ class MainAdminFragment : Fragment() {
         }
 
 
+        val intent = requireActivity().intent
+        adminEmail = intent.getStringExtra("email").toString()
+        adminPass = intent.getStringExtra("password").toString()
+
+        Toast.makeText(requireContext(), "Admin ID=$adminEmail and Pass=$adminPass", Toast.LENGTH_SHORT).show()
+
 
         binding.apply {
             buttonAddStudent.setOnClickListener {
-               val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddStudentFragment()
+               val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddStudentFragment(adminEmail,adminPass)
                 findNavController().navigate(action)
             }
 
             buttonAddTeacher.setOnClickListener {
-                val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddTeacherFragment()
+                val action = MainAdminFragmentDirections.actionMainAdminFragmentToAddTeacherFragment(adminEmail,adminPass)
                 findNavController().navigate(action)
             }
 

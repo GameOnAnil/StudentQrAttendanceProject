@@ -8,7 +8,7 @@
         android:id="@+id/mainAdminFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.admin.MainAdminFragment"
         android:label="fragment_main_admin"
-        tools:layout="@layout/fragment_main_admin" >
+        tools:layout="@layout/fragment_main_admin">
         <action
             android:id="@+id/action_mainAdminFragment_to_addTeacherFragment"
             app:destination="@id/addTeacherFragment" />
@@ -23,12 +23,26 @@
         android:id="@+id/addTeacherFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.admin.AddTeacherFragment"
         android:label="fragment_add_teacher"
-        tools:layout="@layout/fragment_add_teacher" />
+        tools:layout="@layout/fragment_add_teacher">
+        <argument
+            android:name="adminEmail"
+            app:argType="string" />
+        <argument
+            android:name="adminPassword"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/addStudentFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.admin.AddStudentFragment"
         android:label="fragment_add_student"
-        tools:layout="@layout/fragment_add_student" />
+        tools:layout="@layout/fragment_add_student">
+        <argument
+            android:name="adminEmail"
+            app:argType="string" />
+        <argument
+            android:name="adminPassword"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/manageUserFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.admin.ManageUserFragment"

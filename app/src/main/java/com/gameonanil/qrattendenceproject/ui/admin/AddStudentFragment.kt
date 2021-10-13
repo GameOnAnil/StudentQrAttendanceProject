@@ -37,6 +37,8 @@ class AddStudentFragment : Fragment() {
     private var phoneString: String = ""
     private var addressString: String = ""
     private var rollNumber: Int? = null
+    private lateinit var adminEmail: String
+    private lateinit var adminPass: String
 
 
     override fun onCreateView(
@@ -71,6 +73,10 @@ class AddStudentFragment : Fragment() {
 
         mAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+
+        adminEmail = AddStudentFragmentArgs.fromBundle(requireArguments()).adminEmail
+        adminPass = AddStudentFragmentArgs.fromBundle(requireArguments()).adminPassword
+        Log.d(TAG, "onCreateView: STUDENT :EMAIL=$adminEmail and password=$adminPass")
 
 
         binding.apply {
@@ -119,6 +125,17 @@ class AddStudentFragment : Fragment() {
         return binding.root
     }
 
+    private fun loginToAdmin(){
+        mAuth.signInWithEmailAndPassword(adminEmail,adminPass)
+            .addOnSuccessListener {
+                Log.d(TAG, "loginToAdmin: SUCCESS")
+                findNavController().navigateUp()
+            }.addOnFailureListener {
+                Log.d(TAG, "loginToAdmin: FAILED:${it.message}")
+                findNavController().navigateUp()
+            }
+    }
+
     private fun signUpUser(email: String, password: String)
     {
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -157,7 +174,8 @@ class AddStudentFragment : Fragment() {
                 Toast.makeText(requireContext(), "User SignUp Successful", Toast.LENGTH_SHORT)
                     .show()
                 mAuth.signOut()
-                findNavController().navigateUp()
+                loginToAdmin()
+
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "addDetailsToDb: ERROR: ${it.message}")

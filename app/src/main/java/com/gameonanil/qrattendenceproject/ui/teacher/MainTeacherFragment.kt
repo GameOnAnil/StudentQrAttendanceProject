@@ -303,9 +303,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
     private fun decreaseTotalAttendance(studentId: String) {
         Log.d(TAG, "decreaseTotalAttendance: deletetotalatt called!!!")
         val studentDocRef = firestore.collection("attendance_count")
-            .document(studentId)
-            .collection("subject")
-            .document(subjectText)
+            .document("$studentId,$subjectText")
+
         Log.d(TAG, "increaseTotalAttendance: docRef=${studentDocRef.path}")
 
         studentDocRef.get().addOnCompleteListener { docSnapshot ->
