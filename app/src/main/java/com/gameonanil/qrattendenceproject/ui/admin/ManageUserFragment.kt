@@ -144,7 +144,7 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
         val collectionRef = firestore.collection("attendance_count")
         collectionRef.get().addOnSuccessListener { QuerySnapshot ->
             for (documentSnapshot in QuerySnapshot) {
-                val subject = documentSnapshot.id.substringAfter(",")
+                val subject = documentSnapshot.id.substringAfterLast(",")
                 for (item in currentUser.subject!!) {
                     if (subject == item) {
                         documentSnapshot.reference.delete().addOnSuccessListener {
@@ -164,7 +164,7 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
         val collectionRef = firestore.collection("attendance_count")
         collectionRef.get().addOnSuccessListener { QuerySnapshot ->
             for (documentSnapshot in QuerySnapshot) {
-                val studentUid = documentSnapshot.id.substringAfterLast(",")
+                val studentUid = documentSnapshot.id.substringBefore(",")
                 if (studentUid == currentUser.uid) {
                     documentSnapshot.reference.delete().addOnSuccessListener {
                         Log.d(TAG, "ATTENDANCE COUNT DELETE SUCCESS: ")
