@@ -117,16 +117,7 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
 
     override fun handleDeleteClicked(position: Int) {
         val currentUser = mUserList[position]
-        val currantTeacherId = "LNd1qmYq2zdPaTOwsnM1lqNygnp2"
         deleteFromUserCollection(currentUser)
-        if (currentUser.user_type == "student") {
-            deleteFromAttendanceCount(currentUser)
-        }
-        if (currentUser.user_type == "teacher") {
-            deleteWholeFromAttendance(currantTeacherId)
-        }
-
-
     }
 
     private fun deleteFromUserCollection(currentUser: Users) {
@@ -134,6 +125,13 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
         collectionRef.document(currentUser.uid.toString()).delete()
             .addOnSuccessListener {
                 Log.d(TAG, "deleteFromUserCollection: USER COLLECTION DELETED")
+                if (currentUser.user_type == "student") {
+                    deleteFromAttendanceCount(currentUser)
+                    deleteStudentFromDB(currentUser.uid.toString())
+                }
+                if (currentUser.user_type == "teacher") {
+                    deleteWholeFromAttendance(currentTeacherId = currentUser.uid.toString())
+                }
             }.addOnFailureListener {
                 Log.d(TAG, "FAILURE deleting usercollection:${it.message}")
             }
@@ -147,6 +145,20 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
             }.addOnFailureListener {
                 Log.d(TAG, "FAILURE deleting usercollection:${it.message}")
             }
+    }
+
+    private fun deleteStudentFromDB(currentUserUID: String) {
+        val collectionRef = firestore.collection("attendance")
+        collectionRef.get().addOnSuccessListener { QuerySnapshot ->
+            for (documentSnapshot in QuerySnapshot) {
+                documentSnapshot.reference.collection("student_list")
+                    .document(currentUserUID).delete()
+                    .addOnSuccessListener { Log.d(TAG, "Student deleted successfully") }
+                    .addOnFailureListener { Log.d(TAG, "deleteStudentFromDB: ${it.message}") }
+            }
+        }.addOnFailureListener {
+            Log.d(TAG, "deleteStudentFromDB: ERROR:${it.message}")
+        }
     }
 
     private fun deleteWholeFromAttendance(currentTeacherId: String) {
@@ -215,5 +227,6 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
             Log.d(TAG, "deleteTeacherUidDoc: Error:${it.message}")
         }
     }
+
 
 }

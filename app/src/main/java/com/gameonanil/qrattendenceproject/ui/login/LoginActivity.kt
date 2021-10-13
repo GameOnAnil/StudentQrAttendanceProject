@@ -36,13 +36,19 @@ class LoginActivity : AppCompatActivity() {
             val currentUser = mAuth.currentUser
             val docRef = firebaseFirestore.collection("users").document(currentUser!!.uid)
 
-            docRef.get().addOnSuccessListener { docSnapshot->
-                val userTypeString = docSnapshot.data!!["user_type"]
-                Log.d(TAG, "onCreate: userTYpe = $userTypeString ")
-                when(userTypeString){
-                    "admin"->goToAdminActivity()
-                    "student"->goToStudentActivity()
-                    "teacher"->goToTeacherActivity()
+            docRef.get().addOnCompleteListener { docSnapshot->
+                if(docSnapshot.result!!.exists()){
+                    val userTypeString = docSnapshot.result!!.data!!["user_type"]
+                    Log.d(TAG, "onCreate: userTYpe = $userTypeString ")
+                    when(userTypeString){
+                        "admin"->goToAdminActivity()
+                        "student"->goToStudentActivity()
+                        "teacher"->goToTeacherActivity()
+                    }
+                }else{
+                    mAuth.signOut()
+                    binding.progressbarLogin.isVisible =false
+                    Log.d(TAG, "onCreate: ELSE(DOESNT EXIST) CALLED")
                 }
             }
         }
