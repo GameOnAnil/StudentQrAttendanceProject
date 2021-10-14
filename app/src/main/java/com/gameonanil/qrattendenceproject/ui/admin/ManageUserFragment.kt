@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
@@ -115,7 +116,9 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
     }
 
     override fun handleItemClicked(position: Int, user: Users) {
-        TODO("Not yet implemented")
+        val currentUser = mUserList[position]
+        val action = ManageUserFragmentDirections.actionManageUserFragmentToUserDetailFragment(currentUser)
+        findNavController().navigate(action)
     }
 
     override fun handleDeleteClicked(position: Int) {

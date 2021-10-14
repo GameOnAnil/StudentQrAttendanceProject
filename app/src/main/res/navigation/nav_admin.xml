@@ -47,5 +47,17 @@
         android:id="@+id/manageUserFragment"
         android:name="com.gameonanil.qrattendenceproject.ui.admin.ManageUserFragment"
         android:label="fragment_manage_user"
-        tools:layout="@layout/fragment_manage_user" />
+        tools:layout="@layout/fragment_manage_user" >
+        <action
+            android:id="@+id/action_manageUserFragment_to_userDetailFragment"
+            app:destination="@id/userDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.admin.UserDetailFragment"
+        android:label="fragment_user_detail"
+        tools:layout="@layout/fragment_user_detail" >
+        <argument android:name="currentUser"
+            app:argType="com.gameonanil.qrattendenceproject.model.Users"/>
+    </fragment>
 </navigation>
