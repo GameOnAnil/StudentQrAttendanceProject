@@ -1,11 +1,13 @@
 package com.gameonanil.qrattendenceproject.ui.admin
 
 import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +18,7 @@ import com.gameonanil.qrattendenceproject.adapter.ManageUserAdapter
 import com.gameonanil.qrattendenceproject.databinding.FragmentManageUserBinding
 import com.gameonanil.qrattendenceproject.model.Users
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
+import com.gameonanil.qrattendenceproject.ui.teacher.MainTeacherFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -116,10 +119,16 @@ class ManageUserFragment : Fragment(), ManageUserAdapter.OnUserClickListener {
     }
 
     override fun handleDeleteClicked(position: Int) {
-        val currentUser = mUserList[position]
-        deleteFromUserCollection(currentUser)
-        initLoadUsers()
-
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setMessage("Are you sure you want to Delete this User?")
+            .setPositiveButton("Yes") { _: DialogInterface, _: Int ->
+                val currentUser = mUserList[position]
+                deleteFromUserCollection(currentUser)
+                initLoadUsers()
+            }.setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+        builder.create().show()
     }
 
     private fun deleteFromUserCollection(currentUser: Users) {
