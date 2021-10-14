@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -126,6 +127,8 @@ class AddTeacherFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+                binding.progressbarAddTeacher.isVisible = true
+                binding.buttonAddTeacher.isEnabled = false
 
                 val email: String = etEmail.text!!.trim().toString()
                 val password: String = etPass.text!!.trim().toString()
@@ -203,6 +206,8 @@ class AddTeacherFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.d(TAG, "signUpUser: SignUP Failed!!!!!!!")
+                    binding.progressbarAddTeacher.isVisible = false
+                    binding.buttonAddTeacher.isEnabled = true
                 }
             }
     }
@@ -223,7 +228,6 @@ class AddTeacherFragment : Fragment() {
 
         collectionReference.document(user.uid).set(userModel)
             .addOnSuccessListener {
-
                 Toast.makeText(
                     requireContext(),
                     "SignUp Successful",
@@ -231,12 +235,15 @@ class AddTeacherFragment : Fragment() {
                 )
                     .show()
                 mAuth.signOut()
+                binding.progressbarAddTeacher.isVisible = false
+                binding.buttonAddTeacher.isEnabled = true
                 loginToAdmin()
 
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "addDetailsToDb: ERROR: ${it.message}")
+                binding.progressbarAddTeacher.isVisible = false
+                binding.buttonAddTeacher.isEnabled = true
             }
     }
 

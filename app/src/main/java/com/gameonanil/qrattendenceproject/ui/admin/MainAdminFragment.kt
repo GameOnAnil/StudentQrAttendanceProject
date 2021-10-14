@@ -66,8 +66,6 @@ class MainAdminFragment : Fragment() {
         adminEmail = intent.getStringExtra("email").toString()
         adminPass = intent.getStringExtra("password").toString()
 
-        Toast.makeText(requireContext(), "Admin ID=$adminEmail and Pass=$adminPass", Toast.LENGTH_SHORT).show()
-
 
         binding.apply {
             buttonAddStudent.setOnClickListener {

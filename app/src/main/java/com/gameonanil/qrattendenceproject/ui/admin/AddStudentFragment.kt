@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -102,6 +103,9 @@ class AddStudentFragment : Fragment() {
                         .show()
                     return@setOnClickListener
                 }
+                progressbarAddStudent.isVisible = true
+                buttonAddTeacher.isEnabled = false
+
                 nameString = etUserName.text!!.trim().toString()
                 rollNumber = etRoll.text.toString().trim().toInt()
                 if (etPhone.text!!.isNotEmpty()) {
@@ -110,7 +114,6 @@ class AddStudentFragment : Fragment() {
                 if (etAddress.text!!.isNotEmpty()) {
                     addressString = etAddress.text.toString()
                 }
-
 
                 val email: String = etEmail.text!!.trim().toString()
                 val password: String = etPass.text!!.trim().toString()
@@ -142,8 +145,6 @@ class AddStudentFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val newTeacherUser: FirebaseUser = task.result!!.user!!
-
-
                     addDetailsToDb(newTeacherUser,password)
                 } else {
                     Toast.makeText(
@@ -152,6 +153,8 @@ class AddStudentFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.d(TAG, "signUpUser: SignUP Failed!!!!!!!")
+                    binding.progressbarAddStudent.isVisible = false
+                    binding.buttonAddTeacher.isEnabled = true
                 }
             }
     }
@@ -174,11 +177,15 @@ class AddStudentFragment : Fragment() {
                 Toast.makeText(requireContext(), "User SignUp Successful", Toast.LENGTH_SHORT)
                     .show()
                 mAuth.signOut()
+                binding.progressbarAddStudent.isVisible = false
+                binding.buttonAddTeacher.isEnabled = true
                 loginToAdmin()
 
             }.addOnFailureListener {
                 Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 Log.d(TAG, "addDetailsToDb: ERROR: ${it.message}")
+                binding.progressbarAddStudent.isVisible = false
+                binding.buttonAddTeacher.isEnabled = true
             }
     }
 
