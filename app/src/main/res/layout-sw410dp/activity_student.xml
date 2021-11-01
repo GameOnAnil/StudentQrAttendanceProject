@@ -16,15 +16,19 @@
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
+        app:title=""
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:text="Student Page"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
+
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -82,8 +86,8 @@
                     android:id="@+id/tvUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingStart="0dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"
@@ -111,8 +115,8 @@
                     android:id="@+id/tvEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingStart="0dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"
@@ -139,8 +143,8 @@
                     android:id="@+id/tvAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingStart="0dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"
@@ -167,8 +171,8 @@
                     android:id="@+id/tvRoll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingStart="0dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"
@@ -195,8 +199,8 @@
                     android:id="@+id/tvPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
                     android:paddingStart="0dp"
+                    android:paddingTop="8dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:textColor="@color/black"

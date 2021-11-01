@@ -1,5 +1,6 @@
 package com.gameonanil.qrattendenceproject.ui.student
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.view.isVisible
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.ActivityStudentBinding
@@ -19,9 +21,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.integration.android.IntentIntegrator
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class StudentActivity : AppCompatActivity() {
@@ -44,6 +44,7 @@ class StudentActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarStudent)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -111,7 +112,7 @@ class StudentActivity : AppCompatActivity() {
                     Log.d(TAG, "onActivityResult: !!!!!!!!!!teacherId=$finalTeacherId,")
                     Log.d(TAG, "onActivityResult: !!!!!!!!!!date=$finalDate,")
                     Log.d(TAG, "onActivityResult: !!!!!!!!!!subject=$subjectText,")
-                    checkAccess(finalTeacherId,subjectText,finalDate)
+                    checkAccess(finalTeacherId, subjectText, finalDate)
 
                 }
             } else {
@@ -120,7 +121,7 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAccess(teacherId: String, subjectText: String,date: String) {
+    private fun checkAccess(teacherId: String, subjectText: String, date: String) {
         val accessDocReference = firestore
             .collection("attendance")
             .document("$teacherId,$subjectText,$date")
@@ -132,7 +133,7 @@ class StudentActivity : AppCompatActivity() {
                 val accessCheck = documentSnapnot["access_allowed"]
                 Log.d(TAG, "checkAccess: checkAcces=${accessCheck}")
                 if (accessCheck == true) {
-                    addStudentToDb(teacherId, subjectText,date)
+                    addStudentToDb(teacherId, subjectText, date)
                 } else {
                     Toast.makeText(
                         this,
@@ -147,7 +148,7 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun addStudentToDb(teacherId: String, subjectText: String, date : String) {
+    private fun addStudentToDb(teacherId: String, subjectText: String, date: String) {
         firestore.collection("users").document(currentUid).get().addOnSuccessListener {
             val userdata = it.toObject(Student::class.java)
 
@@ -230,9 +231,9 @@ class StudentActivity : AppCompatActivity() {
                 finish()
                 return true
             }
-            R.id.item_edit->{
-                val intent = Intent(this,EditStudentActivity::class.java)
-                intent.putExtra("studentUid",currentUid.toString())
+            R.id.item_edit -> {
+                val intent = Intent(this, EditStudentActivity::class.java)
+                intent.putExtra("studentUid", currentUid.toString())
                 startActivity(intent)
                 return true
             }
