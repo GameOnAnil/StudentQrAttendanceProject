@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QrAttendenceProject">
+        <activity android:name=".ui.student.EditStudentActivity"></activity>
         <activity
             android:name=".ui.login.ForgetPasswordActivity"
             android:screenOrientation="portrait" />

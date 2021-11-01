@@ -86,4 +86,5 @@
             android:id="@+id/action_semFragment_to_mainTeacherFragment"
             app:destination="@id/mainTeacherFragment" />
     </fragment>
+
 </navigation>

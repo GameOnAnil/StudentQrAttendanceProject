@@ -61,9 +61,14 @@ class StudentActivity : AppCompatActivity() {
             }
         }
         binding.progressbarStudent.isVisible = true
+
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         displayStudentDetail()
-
-
     }
 
     private fun displayStudentDetail() {
@@ -143,7 +148,6 @@ class StudentActivity : AppCompatActivity() {
     }
 
     private fun addStudentToDb(teacherId: String, subjectText: String, date : String) {
-
         firestore.collection("users").document(currentUid).get().addOnSuccessListener {
             val userdata = it.toObject(Student::class.java)
 
@@ -213,7 +217,7 @@ class StudentActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        MenuInflater(this).inflate(R.menu.menu_logout, menu)
+        MenuInflater(this).inflate(R.menu.menu_detail, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -224,6 +228,12 @@ class StudentActivity : AppCompatActivity() {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
+                return true
+            }
+            R.id.item_edit->{
+                val intent = Intent(this,EditStudentActivity::class.java)
+                intent.putExtra("studentUid",currentUid.toString())
+                startActivity(intent)
                 return true
             }
             else -> {
