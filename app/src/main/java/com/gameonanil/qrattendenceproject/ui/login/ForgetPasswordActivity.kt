@@ -59,6 +59,11 @@ class ForgetPasswordActivity : AppCompatActivity() {
             }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         finish()

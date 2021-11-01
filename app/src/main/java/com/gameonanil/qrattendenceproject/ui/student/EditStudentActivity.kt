@@ -37,8 +37,7 @@ class EditStudentActivity : AppCompatActivity() {
 
         studentUid = intent.getStringExtra("studentUid")!!
         Log.d(TAG, "onCreate:studentuID++++++$studentUid ")
-        Toast.makeText(this, "studentuid:$studentUid", Toast.LENGTH_SHORT).show()
-        initDetails(studentUid.toString())
+        initDetails(studentUid)
 
         binding.apply {
             buttonAddTeacher.setOnClickListener {
@@ -133,6 +132,11 @@ class EditStudentActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "ERROR:${it.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 
     override fun onBackPressed() {
