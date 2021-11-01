@@ -35,7 +35,6 @@ class StudentActivity : AppCompatActivity() {
     private lateinit var collectionRef: CollectionReference
     private lateinit var currentUid: String
     private lateinit var binding: ActivityStudentBinding
-    private lateinit var subjectTextFromQr: String
     private lateinit var subjectText: String
 
 
@@ -100,14 +99,14 @@ class StudentActivity : AppCompatActivity() {
                 } else {
                     Log.d(TAG, "onActivityResult: Scanned:${result.contents}")
                     val teacherIdPlusSem = result.contents.toString()
-                    // semesterTextFromQr = getLastNCharsOfString(teacherIdPlusSem, 3)
-                    subjectTextFromQr = teacherIdPlusSem.substringAfterLast("/")
-                    subjectText = subjectTextFromQr
-                    Log.d(TAG, "onActivityResult: SUBSTIRNG: SEMESTERteXT =$subjectTextFromQr")
-                    //  val newTeacherId = teacherIdPlusSem.dropLast(3)
-                    val newTeacherId = teacherIdPlusSem.substringBefore("/")
-                    Log.d(TAG, "onActivityResult: NEWTEACHERID=$newTeacherId")
-                    checkAccess(newTeacherId, subjectTextFromQr)
+                    val  subjectAndDate = teacherIdPlusSem.substringAfter("/")
+                    subjectText = subjectAndDate.substringBefore("/")
+                    val finalDate = subjectAndDate.substringAfter("/")
+                    val finalTeacherId = teacherIdPlusSem.substringBefore("/")
+                    Log.d(TAG, "onActivityResult: !!!!!!!!!!teacherId=$finalTeacherId,")
+                    Log.d(TAG, "onActivityResult: !!!!!!!!!!date=$finalDate,")
+                    Log.d(TAG, "onActivityResult: !!!!!!!!!!subject=$subjectText,")
+                    checkAccess(finalTeacherId,subjectText,finalDate)
 
                 }
             } else {
@@ -116,15 +115,10 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAccess(teacherId: String, subjectText: String) {
-        val date = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy.MM.dd")
-        val formattedDate = formatter.format(date)
-
-
+    private fun checkAccess(teacherId: String, subjectText: String,date: String) {
         val accessDocReference = firestore
             .collection("attendance")
-            .document("$teacherId,$subjectText,$formattedDate")
+            .document("$teacherId,$subjectText,$date")
             .collection("access")
             .document(teacherId)
 
@@ -133,7 +127,7 @@ class StudentActivity : AppCompatActivity() {
                 val accessCheck = documentSnapnot["access_allowed"]
                 Log.d(TAG, "checkAccess: checkAcces=${accessCheck}")
                 if (accessCheck == true) {
-                    addStudentToDb(teacherId, subjectText)
+                    addStudentToDb(teacherId, subjectText,date)
                 } else {
                     Toast.makeText(
                         this,
@@ -148,19 +142,13 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-
-
-    private fun addStudentToDb(teacherId: String, subjectText: String) {
-
-        val date = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy.MM.dd")
-        val formattedDate = formatter.format(date)
+    private fun addStudentToDb(teacherId: String, subjectText: String, date : String) {
 
         firestore.collection("users").document(currentUid).get().addOnSuccessListener {
             val userdata = it.toObject(Student::class.java)
 
             val docRef = collectionRef
-                .document("$teacherId,$subjectText,$formattedDate")
+                .document("$teacherId,$subjectText,$date")
                 .collection("student_list")
                 .document(currentUid)
 
@@ -186,11 +174,9 @@ class StudentActivity : AppCompatActivity() {
 
         }
 
-
     }
 
     private fun increaseTotalAttendance(teacherId: String, subjectText: String) {
-
         val studentDocRef = firestore.collection("attendance_count")
             .document("$currentUid,$subjectText")
 

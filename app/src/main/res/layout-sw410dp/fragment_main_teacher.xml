@@ -28,6 +28,15 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ProgressBar
+        android:id="@+id/progressbar_main_teacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:elevation="50dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTeacher"

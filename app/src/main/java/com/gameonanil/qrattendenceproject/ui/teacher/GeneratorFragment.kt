@@ -14,7 +14,6 @@ import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
-import com.gameonanil.qrattendenceproject.ui.student.StudentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.zxing.BarcodeFormat
@@ -98,22 +97,17 @@ class GeneratorFragment : Fragment() {
             }.addOnFailureListener {
                 Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
             }
-
-
-
         }.addOnFailureListener {
             Log.d(TAG, "checkAccess: ERROR:${it.message}")
         }
 
-
     }
 
-    private fun setAccessFalse(teacherId:String,semText:String){
+    private fun setAccessFalse(teacherId: String, semText: String){
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
-
-        val accessDocReference = firestore
+            val accessDocReference = firestore
             .collection("attendance")
             .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
@@ -144,12 +138,16 @@ class GeneratorFragment : Fragment() {
 
     private fun generateOnStart(){
         binding.apply {
+            val date = Calendar.getInstance().time
+            val formatter = SimpleDateFormat("yyyy.MM.dd")
+            val formattedDate = formatter.format(date)
             val teacherId = auth.currentUser!!.uid
-            val newTeacherId = "$teacherId/$subjectText"
+            val newTeacherId = "$teacherId/$subjectText/$formattedDate"
             val bitmap = generateQRCode(newTeacherId)
             imageViewQR.setImageBitmap(bitmap)
             Log.d(TAG, "generateOnStart: QR GENEREATED:$newTeacherId")
-           
+
+
         }
     }
 
@@ -173,7 +171,6 @@ class GeneratorFragment : Fragment() {
 
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -183,7 +180,6 @@ class GeneratorFragment : Fragment() {
         inflater.inflate(R.menu.menu_logout, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.itemLogout) {

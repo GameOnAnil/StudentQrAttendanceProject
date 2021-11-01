@@ -13,6 +13,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -115,15 +116,23 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
             }
 
             buttonDownloadAttendance.setOnClickListener {
+                progressbarMainTeacher.isVisible = true
+                buttonDownloadAttendance.isEnabled = false
+
                 if (attendanceList.isNotEmpty()) {
                     handleDownloadAttendance()
+                    progressbarMainTeacher.isVisible = false
+                    buttonDownloadAttendance.isEnabled = true
                 } else {
                     Toast.makeText(
                         requireContext(),
                         "No Attendance to Download",
                         Toast.LENGTH_SHORT
                     ).show()
+                    progressbarMainTeacher.isVisible = false
+                    buttonDownloadAttendance.isEnabled = true
                 }
+
 
             }
 
@@ -281,6 +290,8 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
                 fos = resolver.openOutputStream(Objects.requireNonNull(excelUri)!!)!!
                 wb.write(fos)
                 Toast.makeText(requireContext(), "EXCEL File Saved", Toast.LENGTH_SHORT).show()
+                binding.progressbarMainTeacher.isVisible = false
+                binding.buttonDownloadAttendance.isEnabled = true
             } else {
 
                 val file = File(
@@ -292,11 +303,17 @@ class MainTeacherFragment : Fragment(), AttendanceAdapter.OnAttendanceClickListe
 
                 Log.d(TAG, "createExcel: Old way called")
                 Toast.makeText(requireContext(), "Excel File Stored", Toast.LENGTH_SHORT).show()
+                binding.progressbarMainTeacher.isVisible = false
+                binding.buttonDownloadAttendance.isEnabled = true
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            binding.progressbarMainTeacher.isVisible = false
+            binding.buttonDownloadAttendance.isEnabled = true
         } catch (io: IOException) {
             Toast.makeText(requireContext(), "Error:${io.message}", Toast.LENGTH_SHORT).show()
+            binding.progressbarMainTeacher.isVisible = false
+            binding.buttonDownloadAttendance.isEnabled = true
         }
     }
 

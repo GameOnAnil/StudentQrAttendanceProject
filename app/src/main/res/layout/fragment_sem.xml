@@ -39,15 +39,13 @@
         android:orientation="vertical"
         android:layout_margin="8dp"
         >
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Choose Subject"
             android:textSize="24sp"
-            android:textColor="@color/black"
+            android:textColor="@color/blue3"
             android:textStyle="bold"
-            android:theme="@style/TextAppearance.AppCompat.Body1"
             android:padding="8dp"
             android:textAlignment="center"
             android:fontFamily="@font/aladin"
@@ -57,11 +55,11 @@
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="3dp"
             android:layout_marginEnd="3dp"
             android:background="@drawable/style_spinner"
-            android:padding="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:textAlignment="center"
             tools:entries="@array/sem_temp"/>
 
