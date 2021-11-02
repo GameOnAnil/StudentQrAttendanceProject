@@ -1,48 +1,81 @@
-package com.gameonanil.qrattendenceproject.ui.student
+package com.gameonanil.qrattendenceproject.ui.admin
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.ActivityEditStudentBinding
+import com.gameonanil.qrattendenceproject.databinding.FragmentEditStudentBinding
+import com.gameonanil.qrattendenceproject.databinding.FragmentUserDetailBinding
 import com.gameonanil.qrattendenceproject.model.Student
+import com.gameonanil.qrattendenceproject.model.Users
+import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
+import com.gameonanil.qrattendenceproject.ui.student.EditStudentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EditStudentActivity : AppCompatActivity() {
-    companion object {
-        private const val TAG = "EditStudentActivity"
+
+class EditStudentFragment : Fragment() {
+    companion object{
+        private const val TAG = "EditStudentFragment"
     }
 
+    private var _binding: FragmentEditStudentBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var studentUid: String
-    private lateinit var binding: ActivityEditStudentBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentEditStudentBinding.inflate(layoutInflater, container, false)
 
-        super.onCreate(savedInstanceState)
-        binding = ActivityEditStudentBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        /**Setting Up Toolbar*/
+        val navHostFragment = NavHostFragment.findNavController(this);
 
-        setSupportActionBar(binding.toolbarEdit)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.mainAdminFragment,
+            )
+        )
+        NavigationUI.setupWithNavController(
+            binding.toolbarEdit,
+            navHostFragment,
+            appBarConfiguration
+        )
+        /** TO USE OPTIONS MENU*/
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbarEdit)
+        binding.toolbarEdit.setNavigationOnClickListener {
+            NavHostFragment.findNavController(this).navigateUp()
+        }
 
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-
-        studentUid = intent.getStringExtra("studentUid")!!
+        studentUid = EditStudentFragmentArgs.fromBundle(requireArguments()).studentUid
         Log.d(TAG, "onCreate:studentuID++++++$studentUid ")
         initDetails(studentUid)
 
-        binding.apply {
+       binding.apply {
             buttonAddTeacher.setOnClickListener {
                 if (etUserName.text.toString().isEmpty()) {
                     Toast.makeText(
-                        this@EditStudentActivity,
+                        requireContext(),
                         "Please Enter User Name",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -50,7 +83,7 @@ class EditStudentActivity : AppCompatActivity() {
                 }
                 if (etRoll.text.toString().isEmpty()) {
                     Toast.makeText(
-                        this@EditStudentActivity,
+                        requireContext(),
                         "Please Enter Roll",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -61,6 +94,7 @@ class EditStudentActivity : AppCompatActivity() {
         }
 
 
+        return binding.root
     }
 
     private fun saveDetail(studentUid: String) {
@@ -83,14 +117,14 @@ class EditStudentActivity : AppCompatActivity() {
                     for (querySnapshot in QuerySnapshot) {
                         val currentTeacherUid = querySnapshot.id.toString()
                         modifyAttendance(currentTeacherUid, studentHashMap)
-
                     }
                 }.addOnFailureListener {
                     Log.d(TAG, "saveDetail: FAILED AT modiflying attendance")
                 }
-                Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Saved Successfully", Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
             }.addOnFailureListener {
-                Toast.makeText(this, "Error:${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error:${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -103,15 +137,14 @@ class EditStudentActivity : AppCompatActivity() {
                         query.reference.update(userHashMap)
                     }
                 }
-                goToStartActivity()
             }.addOnFailureListener {
-                Toast.makeText(this, "ERROR:${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "ERROR:${it.message}", Toast.LENGTH_SHORT).show()
             }
 
     }
 
-    private fun goToStartActivity() {
-        finish()
+    private fun goBack(){
+        findNavController().navigateUp()
     }
 
     private fun initDetails(studentUid: String) {
@@ -127,19 +160,31 @@ class EditStudentActivity : AppCompatActivity() {
                 }
             }
         }.addOnFailureListener {
-            Toast.makeText(this, "ERROR:${it.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "ERROR:${it.message}", Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "initDetails: ERROR_${it.message}")
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return super.onSupportNavigateUp()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_logout, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.itemLogout) {
+            Log.d(ContentValues.TAG, "onOptionsItemSelected: logout pressed")
+
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

@@ -8,6 +8,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
@@ -52,6 +53,21 @@ class UserDetailFragment : Fragment() {
 
         mCurrentUser = UserDetailFragmentArgs.fromBundle(requireArguments()).currentUser
 
+
+        return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initDetail()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun initDetail(){
         binding.apply {
             tvUserName.text = mCurrentUser.username
             tvEmail.text = mCurrentUser.email
@@ -65,13 +81,11 @@ class UserDetailFragment : Fragment() {
             }
 
         }
-
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_logout, menu)
+        inflater.inflate(R.menu.menu_detail, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -83,6 +97,13 @@ class UserDetailFragment : Fragment() {
             startActivity(intent)
             requireActivity().finish()
         }
+        if (item.itemId == R.id.item_edit){
+            if(mCurrentUser.user_type=="student"){
+                val action = UserDetailFragmentDirections.actionUserDetailFragmentToEditStudentFragment(mCurrentUser.uid!!.trim().toString())
+                findNavController().navigate(action)
+            }
+        }
+
         return super.onOptionsItemSelected(item)
     }
 

@@ -59,5 +59,16 @@
         tools:layout="@layout/fragment_user_detail" >
         <argument android:name="currentUser"
             app:argType="com.gameonanil.qrattendenceproject.model.Users"/>
+        <action
+            android:id="@+id/action_userDetailFragment_to_editStudentFragment"
+            app:destination="@id/editStudentFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editStudentFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.admin.EditStudentFragment"
+        android:label="fragment_edit_student"
+        tools:layout="@layout/fragment_edit_student" >
+        <argument android:name="studentUid"
+            app:argType="string"/>
     </fragment>
 </navigation>
