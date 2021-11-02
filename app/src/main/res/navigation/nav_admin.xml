@@ -62,6 +62,9 @@
         <action
             android:id="@+id/action_userDetailFragment_to_editStudentFragment"
             app:destination="@id/editStudentFragment" />
+        <action
+            android:id="@+id/action_userDetailFragment_to_editTeacherFragment"
+            app:destination="@id/editTeacherFragment" />
     </fragment>
     <fragment
         android:id="@+id/editStudentFragment"
@@ -70,5 +73,19 @@
         tools:layout="@layout/fragment_edit_student" >
         <argument android:name="studentUid"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_editStudentFragment_to_manageUserFragment"
+            app:popUpTo="@id/manageUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTeacherFragment"
+        android:name="com.gameonanil.qrattendenceproject.ui.admin.EditTeacherFragment"
+        android:label="fragment_edit_teacher"
+        tools:layout="@layout/fragment_edit_teacher" >
+        <argument android:name="studentUid"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_editTeacherFragment_to_manageUserFragment"
+            app:popUpTo="@id/manageUserFragment" />
     </fragment>
 </navigation>

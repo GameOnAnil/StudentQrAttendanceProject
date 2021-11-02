@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Student Detail"
+            android:text="Edit Teacher Detail"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -67,24 +67,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Roll"
-            app:helperText="Required *"
-            app:helperTextTextColor="@color/red">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRoll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_book"
-                android:drawablePadding="8dp"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:textColor="@color/black" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"

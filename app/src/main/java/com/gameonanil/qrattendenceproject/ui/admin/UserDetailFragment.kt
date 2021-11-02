@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +17,7 @@ import com.gameonanil.qrattendenceproject.databinding.FragmentUserDetailBinding
 import com.gameonanil.qrattendenceproject.model.Users
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class UserDetailFragment : Fragment() {
@@ -53,7 +55,6 @@ class UserDetailFragment : Fragment() {
 
         mCurrentUser = UserDetailFragmentArgs.fromBundle(requireArguments()).currentUser
 
-
         return binding.root
     }
 
@@ -62,12 +63,14 @@ class UserDetailFragment : Fragment() {
         initDetail()
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     private fun initDetail(){
+
         binding.apply {
             tvUserName.text = mCurrentUser.username
             tvEmail.text = mCurrentUser.email
@@ -100,6 +103,10 @@ class UserDetailFragment : Fragment() {
         if (item.itemId == R.id.item_edit){
             if(mCurrentUser.user_type=="student"){
                 val action = UserDetailFragmentDirections.actionUserDetailFragmentToEditStudentFragment(mCurrentUser.uid!!.trim().toString())
+                findNavController().navigate(action)
+            }
+            if(mCurrentUser.user_type=="teacher"){
+                val action = UserDetailFragmentDirections.actionUserDetailFragmentToEditTeacherFragment(mCurrentUser.uid!!.trim().toString())
                 findNavController().navigate(action)
             }
         }
