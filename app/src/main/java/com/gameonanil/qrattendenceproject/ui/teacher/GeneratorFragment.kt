@@ -45,7 +45,7 @@ class GeneratorFragment : Fragment() {
     ): View {
         _binding = FragmentGeneratorBinding.inflate(layoutInflater,container,false)
 
-        val navHostFragment = NavHostFragment.findNavController(this);
+        val navHostFragment = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.mainTeacherFragment,
             )
@@ -65,7 +65,7 @@ class GeneratorFragment : Fragment() {
         teacherId = auth.currentUser!!.uid
 
 
-
+        Log.d(TAG, "onCreateView: ONCREATE CALLED!!!!!!!!!!!!")
         generateOnStart()
 
         return binding.root

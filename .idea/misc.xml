@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/QrAttendenceProject/app/src/main/res/drawable/et_background.xml" value="0.18078175895765472" />
+        <entry key="..\:/QrAttendenceProject/app/src/main/res/layout-sw350dp/fragment_sem.xml" value="0.3087719298245614" />
+        <entry key="..\:/QrAttendenceProject/app/src/main/res/layout-sw410dp/activity_login.xml" value="0.25" />
+        <entry key="..\:/QrAttendenceProject/app/src/main/res/layout-sw410dp/fragment_sem.xml" value="0.22" />
+        <entry key="..\:/QrAttendenceProject/app/src/main/res/layout/fragment_sem.xml" value="0.849445324881141" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

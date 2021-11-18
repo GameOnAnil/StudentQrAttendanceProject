@@ -13,6 +13,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_admin">AdminActivity</string>
     <string name="login">Login</string>
+    <string name="choose_subject">Choose Subject</string>
+    <string name="enter_subject">Enter Subject</string>
 
     <string-array name="user_type">
         <item>Select User Type</item>

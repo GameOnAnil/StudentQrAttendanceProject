@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/search_background"
-    tools:context=".ui.teacher.SubjectFragment"
-    android:theme="@style/CustomThemeForSem">
+    android:theme="@style/CustomThemeForSem"
+    tools:context=".ui.teacher.SubjectFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_sem"
@@ -16,18 +16,17 @@
         android:elevation="10dp"
         android:gravity="start"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
-       >
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:text="Enter Subject"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:focusable="false"/>
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -36,21 +35,21 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_sem"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
         android:layout_margin="8dp"
-        >
+        android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose Subject"
-            android:textSize="24sp"
-            android:textColor="@color/blue3"
-            android:textStyle="bold"
-            android:padding="8dp"
-            android:textAlignment="center"
-            android:fontFamily="@font/aladin"
             android:layout_marginTop="150dp"
-            />
+            android:fontFamily="@font/aladin"
+            android:padding="8dp"
+            android:text="Choose Subject"
+            android:textAlignment="center"
+            android:textColor="@color/blue3"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
@@ -61,7 +60,7 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:textAlignment="center"
-            tools:entries="@array/sem_temp"/>
+            tools:entries="@array/sem_temp" />
 
 
         <LinearLayout
