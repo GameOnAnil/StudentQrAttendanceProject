@@ -13,4 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-/functions/serviceAccountKeyForQr.json
