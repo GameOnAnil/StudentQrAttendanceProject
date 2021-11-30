@@ -13,6 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.gameonanil.qrattendenceproject.R
 import com.gameonanil.qrattendenceproject.databinding.FragmentGeneratorBinding
+import com.gameonanil.qrattendenceproject.model.Student
 import com.gameonanil.qrattendenceproject.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,7 +26,7 @@ import kotlin.collections.HashMap
 
 
 class GeneratorFragment : Fragment() {
-    companion object{
+    companion object {
         private const val TAG = "GeneratorFragment"
     }
 
@@ -43,14 +44,19 @@ class GeneratorFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGeneratorBinding.inflate(layoutInflater,container,false)
+        _binding = FragmentGeneratorBinding.inflate(layoutInflater, container, false)
 
         val navHostFragment = NavHostFragment.findNavController(this)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.mainTeacherFragment,
+            setOf(
+                R.id.mainTeacherFragment,
             )
         )
-        NavigationUI.setupWithNavController(binding.toolbarTeacherGenerate, navHostFragment,appBarConfiguration)
+        NavigationUI.setupWithNavController(
+            binding.toolbarTeacherGenerate,
+            navHostFragment,
+            appBarConfiguration
+        )
 
         /** TO USE OPTIONS MENU*/
         setHasOptionsMenu(true)
@@ -71,14 +77,14 @@ class GeneratorFragment : Fragment() {
         return binding.root
     }
 
-    private fun initAccessTrue(teacherId:String,semText:String){
+    private fun initAccessTrue(teacherId: String) {
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
 
         val teacherDocRef = firestore.collection("attendance")
             .document("$teacherId,$subjectText,$formattedDate")
-        val emptyHashMap = HashMap<String,String>()
+        val emptyHashMap = HashMap<String, String>()
         emptyHashMap["dummyField"] = ""
 
         /**JUST ADDING TEACHER ID FIELD WITH DUMMY TEXT**/
@@ -90,9 +96,24 @@ class GeneratorFragment : Fragment() {
                 .collection("access")
                 .document(teacherId)
 
-            val accessHashMap = HashMap<String,Boolean>()
+            val accessHashMap = HashMap<String, Boolean>()
             accessHashMap["access_allowed"] = true
             accessDocReference.set(accessHashMap).addOnSuccessListener {
+                addDummyStudentToDb(
+                    teacherId,
+                    subjectText,
+                    formattedDate,
+                    Student(
+                        "dummy_uid",
+                        "dummy@gmail.com",
+                        "password",
+                        "Dummy User",
+                        1,
+                        "",
+                        "",
+                        "student"
+                    )
+                )
                 Log.d(TAG, "setAccessFalse: ACCESS TRUE SUCESSFUL ")
             }.addOnFailureListener {
                 Log.d(TAG, "setAccessFalse: ERROR:${it.message}")
@@ -103,17 +124,17 @@ class GeneratorFragment : Fragment() {
 
     }
 
-    private fun setAccessFalse(teacherId: String, semText: String){
+    private fun setAccessFalse(teacherId: String) {
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy.MM.dd")
         val formattedDate = formatter.format(date)
-            val accessDocReference = firestore
+        val accessDocReference = firestore
             .collection("attendance")
             .document("$teacherId,$subjectText,$formattedDate")
             .collection("access")
             .document(teacherId)
 
-        val accessHashMap = HashMap<String,Boolean>()
+        val accessHashMap = HashMap<String, Boolean>()
         accessHashMap["access_allowed"] = false
         accessDocReference.set(accessHashMap).addOnSuccessListener {
             Log.d(TAG, "setAccessFalse: ACCESS FALSE SUCESSFUL ")
@@ -124,19 +145,19 @@ class GeneratorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (teacherId.isNotEmpty()){
-            initAccessTrue(teacherId,subjectText)
+        if (teacherId.isNotEmpty()) {
+            initAccessTrue(teacherId)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        if (teacherId.isNotEmpty()){
-            setAccessFalse(teacherId,subjectText)
+        if (teacherId.isNotEmpty()) {
+            setAccessFalse(teacherId)
         }
     }
 
-    private fun generateOnStart(){
+    private fun generateOnStart() {
         binding.apply {
             val date = Calendar.getInstance().time
             val formatter = SimpleDateFormat("yyyy.MM.dd")
@@ -154,20 +175,42 @@ class GeneratorFragment : Fragment() {
     private fun generateQRCode(text: String): Bitmap {
         val width = 500
         val height = 500
-        val bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val codeWriter = MultiFormatWriter()
         try {
-            val bitMatrix = codeWriter.encode(text, BarcodeFormat.QR_CODE,width,height)
-            for (x in 0 until width){
-                for (y in 0 until height){
-                    bitmap.setPixel(x,y,if(bitMatrix[x,y]) Color.BLACK else Color.WHITE)
+            val bitMatrix = codeWriter.encode(text, BarcodeFormat.QR_CODE, width, height)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
                 }
             }
-        }catch (e: WriterException){
+        } catch (e: WriterException) {
             Log.d(TAG, "generateQRCode: ${e.message}")
         }
 
         return bitmap
+
+    }
+
+    private fun addDummyStudentToDb(
+        teacherId: String,
+        subjectText: String,
+        date: String,
+        student: Student
+    ) {
+        val docRef = firestore.collection("attendance").document("$teacherId,$subjectText,$date")
+            .collection("student_list").document("dummy_uid")
+
+        docRef.get().addOnCompleteListener { documentSnapshot ->
+            if (!documentSnapshot.result!!.exists()) {
+                docRef.set(student).addOnSuccessListener {
+                    Log.d(TAG, "Dummy Student Added")
+                }.addOnFailureListener {
+                    Log.d(TAG, "addDummyStudentToDb: ERROR:")
+                }
+            }
+        }
+
 
     }
 
