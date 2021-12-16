@@ -1,7 +1,7 @@
 <img src = "new.png" />
 
 
-# QrAttendanceAppDemo
+# Studen QR Attendance App
 This is our 3rd Year Project on a Simple QrAttendance System.
 
 ***Download latest apk from below 👇***
